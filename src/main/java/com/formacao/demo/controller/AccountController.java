@@ -1,7 +1,6 @@
 package com.formacao.demo.controller;
 
 import com.formacao.demo.domain.Account;
-import com.formacao.demo.domain.Client;
 import com.formacao.demo.domain.Transaction;
 import com.formacao.demo.service.AccountService;
 import org.springframework.beans.factory.annotation.Autowired;

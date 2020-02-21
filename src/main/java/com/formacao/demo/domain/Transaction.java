@@ -29,32 +29,68 @@ public class Transaction implements Serializable {
     private double transactionAmount;
 
     private Date transactionDate;
-    private Integer typeTransaction;
+    private TypeTransaction typeTransaction;
 
-    public Transaction(){
+    public Transaction() {
 
     }
+
     public Transaction(Integer id, Account sourceAccount, Account targetAccount, double transactionAmount, Date transactionDate, TypeTransaction typeTransaction) {
         this.id = id;
         this.sourceAccount = sourceAccount;
         this.targetAccount = targetAccount;
         this.transactionAmount = transactionAmount;
         this.transactionDate = transactionDate;
-        this.typeTransaction = (typeTransaction == null) ? null : typeTransaction.getCodeType();
+        this.typeTransaction = typeTransaction;
     }
 
-    public Integer getId() {return id;}
-    public void setId(Integer id) {this.id = id;}
-    public Account getSourceAccount() {return sourceAccount;}
-    public void setSourceAccount(Account sourceAccount) {this.sourceAccount = sourceAccount;}
-    public Account getTargetAccount() {return targetAccount;}
-    public void setTargetAccount(Account targetAccount) {this.targetAccount = targetAccount;}
-    public double getTransactionAmount() {return transactionAmount;}
-    public void setTransactionAmount(double transactionAmount) {this.transactionAmount = transactionAmount;}
-    public Date getTransactionDate() {return transactionDate;}
-    public void setTransactionDate(Date transactionDate) {this.transactionDate = transactionDate;}
-    public Integer getTypeTransaction() {return typeTransaction;}
-    public void setTypeTransaction(Integer typeTransaction) {this.typeTransaction = typeTransaction;}
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    public Account getSourceAccount() {
+        return sourceAccount;
+    }
+
+    public void setSourceAccount(Account sourceAccount) {
+        this.sourceAccount = sourceAccount;
+    }
+
+    public Account getTargetAccount() {
+        return targetAccount;
+    }
+
+    public void setTargetAccount(Account targetAccount) {
+        this.targetAccount = targetAccount;
+    }
+
+    public double getTransactionAmount() {
+        return transactionAmount;
+    }
+
+    public void setTransactionAmount(double transactionAmount) {
+        this.transactionAmount = transactionAmount;
+    }
+
+    public Date getTransactionDate() {
+        return transactionDate;
+    }
+
+    public void setTransactionDate(Date transactionDate) {
+        this.transactionDate = transactionDate;
+    }
+
+    public TypeTransaction getTypeTransaction() {
+        return typeTransaction;
+    }
+
+    public void setTypeTransaction(TypeTransaction typeTransaction) {
+        this.typeTransaction = typeTransaction;
+    }
 
     @Override
     public boolean equals(Object o) {

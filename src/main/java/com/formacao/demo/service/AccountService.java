@@ -6,8 +6,11 @@ import com.formacao.demo.repository.AccountRepository;
 import com.formacao.demo.repository.TransactionRepository;
 import com.formacao.demo.service.excepetion.ObjectNotFoundExcepetion;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import javax.persistence.criteria.CriteriaBuilder;
 import java.util.List;
 import java.util.Optional;
 
@@ -31,12 +34,17 @@ public class AccountService {
 
     public void updateData(Account newObj, Account obj) {
         newObj.setId(obj.getId());
+        newObj.setBalance(obj.getBalance());
     }
 
-    public Account update(Account obj) {
-        Account newObj = find(obj.getId());
-        updateData(newObj, obj);
-        return accountRepository.save(newObj);
+//    public Account update(Account obj) {
+//        Account newObj = find(obj.getId());
+//        updateData(newObj, obj);
+//        return accountRepository.save(newObj);
+//    }
+//
+    public Account updateBalance (Account account) {
+        return accountRepository.save(account);
     }
 
     public void delete(Integer id) {

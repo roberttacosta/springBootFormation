@@ -2,6 +2,7 @@ package com.formacao.demo.service;
 
 import com.formacao.demo.domain.Account;
 import com.formacao.demo.domain.Transaction;
+import com.formacao.demo.domain.enums.TypeTransaction;
 import com.formacao.demo.repository.AccountRepository;
 import com.formacao.demo.repository.TransactionRepository;
 import com.formacao.demo.service.excepetion.ObjectNotFoundExcepetion;
@@ -23,17 +24,32 @@ public class TransactionService {
         return obj.orElseThrow(() -> new ObjectNotFoundExcepetion("Objeto não encontrado:" + id + ". Tipo:" + Transaction.class.getName()));
     }
 
-    public Transaction insertNewTransaction (Transaction obj){
+    public Transaction insert(Transaction obj){
         obj.setId(null);
-        Integer typeTransaction = obj.getTypeTransaction();
-        if (typeTransaction == 1){
-            withdraw(obj);
-        }
-        else if (typeTransaction ==2){
-            deposit(obj);
-        }
         return transactionRepository.save(obj);
+    }
 
+    public Account validateInsert (Transaction obj){
+        Account account = obj.getSourceAccount();
+        Double balance = account.getBalance();
+        Double valor = obj.getTransactionAmount();
+        if(obj.getTypeTransaction().equals(TypeTransaction.WITHDRAW)){
+            if(isNotNegative(obj)){
+               account.setBalance((balance - valor));
+            }
+            else {
+                 throw new ObjectNotFoundExcepetion("Current balance is less than withdrawal amount, maximum allowable withdrawal amount is:" + balance);}
+
+        }
+        return account;
+    }
+
+    public boolean isNotNegative(Transaction obj){
+        Account account = obj.getSourceAccount();
+        Double balance = account.getBalance();
+        Double transactionAmount = obj.getTransactionAmount();
+        if((balance - transactionAmount) > 0){ return true;}
+        else return false;
     }
 
     public void delete (Integer id){
@@ -41,19 +57,6 @@ public class TransactionService {
         transactionRepository.deleteById(id);
     }
 
-    private ObjectNotFoundExcepetion withdraw(Transaction obj){
-       Account account = obj.getSourceAccount();
-       Double balanceWithdraw = obj.getTransactionAmount();
-       Double balance = account.getBalance();
-
-        if((balance - balanceWithdraw) < 0){
-            return new ObjectNotFoundExcepetion("Current balance is less than withdrawal amount, maximum allowable withdrawal amount is:" + balance);
-        }
-        else {
-            account.setBalance((balance-balanceWithdraw));
-        }
-        return null;
-    }
 
     private void deposit(Transaction obj){
         Account account = obj.getSourceAccount();
