@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
+import javax.validation.constraints.Pattern;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
@@ -15,8 +16,8 @@ public class Account implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer idAccount;
-    @JsonFormat(pattern = "dd/MM/yyyy")
+    private Integer id;
+    @JsonFormat(pattern = "dd/MM/yyyy HH:mm")
     private Date dateCreation;
     private double balance;
     @JsonIgnore
@@ -30,14 +31,15 @@ public class Account implements Serializable {
 
     }
 
-    public Account(int idAccount, Date dateCreation, double balance) {
-        this.idAccount = idAccount;
+    public Account(Integer id, Date dateCreation, double balance) {
+        this.id = id;
         this.dateCreation = dateCreation;
         this.balance = balance;
     }
 
-    public int getIdAccount() {return idAccount;}
-    public void setIdAccount(Integer idAccount) {this.idAccount = idAccount;}
+
+    public Integer getId() {return id;}
+    public void setId(Integer id) {this.id = id;}
     public Date getDateCreation() {return dateCreation;}
     public void setDateCreation(Date dateCreation) {this.dateCreation = dateCreation;}
     public double getBalance() {return balance;}
@@ -52,11 +54,11 @@ public class Account implements Serializable {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Account account = (Account) o;
-        return idAccount == account.idAccount;
+        return id == account.id;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(idAccount);
+        return Objects.hash(id);
     }
 }

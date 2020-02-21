@@ -1,9 +1,12 @@
 package com.formacao.demo.domain;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.br.CPF;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotEmpty;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.Objects;
@@ -14,30 +17,34 @@ public class Client implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer idClient;
+    private Integer id;
+    @NotEmpty(message = "Preenchimento obrigatório")
+    @Length(min = 5, max = 120, message = "O tamanho deve ser entre 5 e 120 caracteres")
     private String name;
+    @NotEmpty (message = "Preenchimento obrigatório")
+    @CPF
     private String cpf;
     @JsonFormat(pattern = "dd/MM/yyyy")
     private Date dateCreation;
-
+    @JsonIgnore
     @OneToOne
-    @JoinColumn (name="idAccount")
+    @JoinColumn (name="id_account")
     private Account account;
 
     public Client(){
 
     }
 
-    public Client(int idClient, String name, String cpf, Date dateCreation, Account account) {
-        this.idClient = idClient;
+    public Client(Integer id, String name, String cpf, Date dateCreation, Account account) {
+        this.id = id;
         this.name = name;
         this.cpf = cpf;
         this.dateCreation = dateCreation;
         this.account = account;
     }
 
-    public int getIdClient() {return idClient;}
-    public void setIdClient(Integer idClient) {this.idClient = idClient;}
+    public Integer getId() {return id;}
+    public void setId(Integer id) {this.id = id;}
     public String getName() {return name;}
     public void setName(String name) {this.name = name;}
     public String getCpf() {return cpf;}
@@ -52,11 +59,11 @@ public class Client implements Serializable {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Client client = (Client) o;
-        return idClient == client.idClient;
+        return id == client.id;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(idClient);
+        return Objects.hash(id);
     }
 }

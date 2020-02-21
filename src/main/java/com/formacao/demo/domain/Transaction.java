@@ -1,6 +1,6 @@
 package com.formacao.demo.domain;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.formacao.demo.domain.enums.TypeTransaction;
 
 import javax.persistence.*;
@@ -15,12 +15,13 @@ public class Transaction implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer idTransaction;
+    private Integer id;
 
     @ManyToOne
     @JoinColumn(name = "idSourceAccount")
     private Account sourceAccount;
 
+    @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "idTargetAccount")
     private Account targetAccount;
@@ -33,8 +34,8 @@ public class Transaction implements Serializable {
     public Transaction(){
 
     }
-    public Transaction(Integer idTransaction, Account sourceAccount, Account targetAccount, double transactionAmount, Date transactionDate, TypeTransaction typeTransaction) {
-        this.idTransaction = idTransaction;
+    public Transaction(Integer id, Account sourceAccount, Account targetAccount, double transactionAmount, Date transactionDate, TypeTransaction typeTransaction) {
+        this.id = id;
         this.sourceAccount = sourceAccount;
         this.targetAccount = targetAccount;
         this.transactionAmount = transactionAmount;
@@ -42,8 +43,8 @@ public class Transaction implements Serializable {
         this.typeTransaction = (typeTransaction == null) ? null : typeTransaction.getCodeType();
     }
 
-    public int getIdTransaction() {return idTransaction;}
-    public void setIdTransaction(Integer idTransaction) {this.idTransaction = idTransaction;}
+    public Integer getId() {return id;}
+    public void setId(Integer id) {this.id = id;}
     public Account getSourceAccount() {return sourceAccount;}
     public void setSourceAccount(Account sourceAccount) {this.sourceAccount = sourceAccount;}
     public Account getTargetAccount() {return targetAccount;}
@@ -60,11 +61,11 @@ public class Transaction implements Serializable {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Transaction transaction = (Transaction) o;
-        return idTransaction == transaction.idTransaction;
+        return id == transaction.id;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(idTransaction);
+        return Objects.hash(id);
     }
 }

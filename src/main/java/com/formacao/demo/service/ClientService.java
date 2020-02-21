@@ -1,7 +1,6 @@
 package com.formacao.demo.service;
 
 import com.formacao.demo.domain.Client;
-import com.formacao.demo.domain.Transaction;
 import com.formacao.demo.repository.AccountRepository;
 import com.formacao.demo.repository.ClientRepository;
 import com.formacao.demo.service.excepetion.ObjectNotFoundExcepetion;
@@ -14,9 +13,9 @@ import java.util.Optional;
 @Service
 public class ClientService {
 
-
+    @Autowired
     private ClientRepository clientRepository;
-
+    @Autowired
     private AccountRepository accountRepository;
 
     public Client find(Integer id){
@@ -30,7 +29,7 @@ public class ClientService {
     }
 
     public Client insert (Client obj){
-        obj.setIdClient(null);
+        obj.setId(null);
         return clientRepository.save(obj);
     }
 
@@ -39,7 +38,7 @@ public class ClientService {
     }
 
     public Client update(Client obj) {
-        Client newObj = find(obj.getIdClient());
+        Client newObj = find(obj.getId());
         updateData(newObj, obj);
         return clientRepository.save(newObj);
     }

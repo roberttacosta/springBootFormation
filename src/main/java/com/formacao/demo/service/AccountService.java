@@ -8,7 +8,6 @@ import com.formacao.demo.service.excepetion.ObjectNotFoundExcepetion;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -25,17 +24,17 @@ public class AccountService {
         return obj.orElseThrow(() -> new ObjectNotFoundExcepetion("Objeto não encontrado:" + id + ". Tipo:" + Account.class.getName()));
     }
 
-    public Account insert (Account obj){
-        obj.setIdAccount(null);
+    public Account insert(Account obj){
+        obj.setId(null);
         return accountRepository.save(obj);
     }
 
-    public void updateData (Account newObj, Account obj) {
-        newObj.setIdAccount(obj.getIdAccount());
+    public void updateData(Account newObj, Account obj) {
+        newObj.setId(obj.getId());
     }
 
     public Account update(Account obj) {
-        Account newObj = find(obj.getIdAccount());
+        Account newObj = find(obj.getId());
         updateData(newObj, obj);
         return accountRepository.save(newObj);
     }
@@ -43,6 +42,11 @@ public class AccountService {
     public void delete(Integer id) {
         find(id);
         accountRepository.deleteById(id);
+    }
+
+    public List<Transaction> bankStatement(Integer id){
+        Account obj = find(id);
+        return transactionRepository.findAllBySourceAccount(obj);
     }
 
 }
