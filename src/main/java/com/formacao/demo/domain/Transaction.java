@@ -5,6 +5,7 @@ import com.formacao.demo.domain.enums.TypeTransaction;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.Objects;
 
@@ -21,21 +22,29 @@ public class Transaction implements Serializable {
     @JoinColumn(name = "idSourceAccount")
     private Account sourceAccount;
 
-    @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "idTargetAccount")
     private Account targetAccount;
 
     private double transactionAmount;
 
-    private Date transactionDate;
+    @JsonIgnore
+    private LocalDateTime transactionDate;
     private TypeTransaction typeTransaction;
 
     public Transaction() {
 
     }
 
-    public Transaction(Integer id, Account sourceAccount, Account targetAccount, double transactionAmount, Date transactionDate, TypeTransaction typeTransaction) {
+    public Transaction(Integer id, Account sourceAccount, double transactionAmount, LocalDateTime transactionDate, TypeTransaction typeTransaction) {
+        this.id = id;
+        this.sourceAccount = sourceAccount;
+        this.transactionAmount = transactionAmount;
+        this.transactionDate = transactionDate;
+        this.typeTransaction = typeTransaction;
+    }
+
+    public Transaction(Integer id, Account sourceAccount, Account targetAccount, double transactionAmount, LocalDateTime transactionDate, TypeTransaction typeTransaction) {
         this.id = id;
         this.sourceAccount = sourceAccount;
         this.targetAccount = targetAccount;
@@ -76,11 +85,11 @@ public class Transaction implements Serializable {
         this.transactionAmount = transactionAmount;
     }
 
-    public Date getTransactionDate() {
+    public LocalDateTime getTransactionDate() {
         return transactionDate;
     }
 
-    public void setTransactionDate(Date transactionDate) {
+    public void setTransactionDate(LocalDateTime transactionDate) {
         this.transactionDate = transactionDate;
     }
 

@@ -2,16 +2,15 @@ package com.formacao.demo.controller;
 
 import com.formacao.demo.domain.Account;
 import com.formacao.demo.domain.Transaction;
+import com.formacao.demo.dto.TransactionDTO;
 import com.formacao.demo.repository.TransactionRepository;
 import com.formacao.demo.service.AccountService;
 import com.formacao.demo.service.TransactionService;
 import com.formacao.demo.service.excepetion.ObjectNotFoundExcepetion;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import javax.validation.Valid;
@@ -27,13 +26,12 @@ public class TransactionController {
 
 
     @RequestMapping (method = RequestMethod.POST)
-    public ResponseEntity<Void> insert(@Valid @RequestBody Transaction obj){
-        Account account = transactionService.validateInsert(obj);
-        
-        Transaction transaction = transactionService.insert(obj);
-        accountService.updateBalance(account);
+    @ResponseBody
+    @ResponseStatus(HttpStatus.CREATED)
+    public Transaction insert(@Valid @RequestBody TransactionDTO transactionDTO){
+        Transaction transaction = transactionService.insert(transactionDTO);
 
-        URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(transaction.getId()).toUri();
-        return ResponseEntity.created(uri).build();
+//        URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(transactionService.buildTransaction(transactionDTO, accountService.find(transactionDTO.getIdSourceAccount()), accountService.find(transactionDTO.getIdTargetAccount())).getId()).toUri();
+        return transaction;
     }
 }

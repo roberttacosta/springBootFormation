@@ -27,7 +27,6 @@ public class Client implements Serializable {
     @NotEmpty(message = "Preenchimento obrigatório")
     @CPF
     private String cpf;
-    @JsonIgnore
     @OneToOne
     @JoinColumn(name = "id_account")
     private Account account;

@@ -18,22 +18,28 @@ public class AccountController {
     @Autowired
     private AccountService accountService;
 
-    @RequestMapping(value="id/{id}", method = RequestMethod.GET)
-    public ResponseEntity<Account> find(@PathVariable Integer id){
+    @RequestMapping(value = "id/{id}", method = RequestMethod.GET)
+    public ResponseEntity<Account> find(@PathVariable Integer id) {
         Account obj = accountService.find(id);
         return ResponseEntity.ok().body(obj);
     }
 
-    @RequestMapping(value="statement/{id}", method = RequestMethod.GET)
-    public ResponseEntity<List<Transaction>> eita(@PathVariable Integer id){
+    @RequestMapping(method = RequestMethod.GET)
+    public ResponseEntity<List<Account>> findAll() {
+        List<Account> list = accountService.findAll();
+        return ResponseEntity.ok().body(list);
+    }
+
+    @RequestMapping(value = "statement/{id}", method = RequestMethod.GET)
+    public ResponseEntity<List<Transaction>> statement(@PathVariable Integer id) {
         List<Transaction> list = accountService.bankStatement(id);
         return ResponseEntity.ok().body(list);
     }
 
-    @RequestMapping (method = RequestMethod.POST)
-    public ResponseEntity<Void> insert(@Valid @RequestBody Account obj){
-        Account account = accountService.insert(obj);
-        URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(account.getId()).toUri();
-        return ResponseEntity.created(uri).build();
-    }
+//    @RequestMapping (method = RequestMethod.POST)
+//    public ResponseEntity<Void> insert(@Valid @RequestBody Account obj){
+//        Account account = accountService.insert(obj);
+//        URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(account.getId()).toUri();
+//        return ResponseEntity.created(uri).build();
+//    }
 }

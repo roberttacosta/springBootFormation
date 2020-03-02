@@ -32,6 +32,7 @@ public class Account implements Serializable {
 
     public Account(Integer id, LocalDateTime dateCreation, double balance) {
         this.id = id;
+        this.dateCreation = dateCreation;
         this.balance = balance;
     }
 
