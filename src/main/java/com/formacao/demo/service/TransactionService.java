@@ -1,6 +1,7 @@
 package com.formacao.demo.service;
 
 import com.formacao.demo.domain.Account;
+import com.formacao.demo.domain.Client;
 import com.formacao.demo.domain.Transaction;
 import com.formacao.demo.domain.enums.TypeTransaction;
 import com.formacao.demo.dto.TransactionDTO;
@@ -13,6 +14,7 @@ import org.springframework.stereotype.Service;
 
 import javax.validation.constraints.NotEmpty;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -21,15 +23,7 @@ public class TransactionService {
     @Autowired
     private TransactionRepository transactionRepository;
     @Autowired
-    private AccountRepository accountRepository;
-    @Autowired
     private AccountService accountService;
-
-
-    private Transaction find(Integer id) {
-        Optional<Transaction> obj = transactionRepository.findById(id);
-        return obj.orElseThrow(() -> new ObjectNotFoundExcepetion("Objeto não encontrado:" + id + ". Tipo:" + Transaction.class.getName()));
-    }
 
     public Transaction insert(TransactionDTO transactionDTO) {
         Account sourceAccount = accountService.find(transactionDTO.getIdSourceAccount());
@@ -50,12 +44,14 @@ public class TransactionService {
 
     public Account withdraw(Transaction transaction) {
         Double balance = transaction.getSourceAccount().getBalance();
-        Double valor = transaction.getTransactionAmount();
+        Double amount = transaction.getTransactionAmount();
+
+        transactionAmountGreaterThanZero(transaction);
 
         if (!sourceAccountIsNotNegative(transaction))
             throw new ObjectNotFoundExcepetion("Current balance is less than withdrawal amount, maximum allowable withdrawal amount is:" + balance);
 
-        transaction.getSourceAccount().setBalance((balance - valor));
+        transaction.getSourceAccount().setBalance((balance - amount));
 
         return transaction.getSourceAccount();
     }
@@ -63,10 +59,12 @@ public class TransactionService {
     public Account deposit(Transaction transaction) {
         Account account = transaction.getSourceAccount();
         Double balance = account.getBalance();
-        Double valor = transaction.getTransactionAmount();
+        Double amount = transaction.getTransactionAmount();
+
+        transactionAmountGreaterThanZero(transaction);
 
         if (accountService.sourceAccountExists(transaction)) {
-            account.setBalance(balance + valor);
+            account.setBalance(balance + amount);
         } else throw new ObjectNotFoundExcepetion("Source account not exists");
 
         return transaction.getSourceAccount();
@@ -77,18 +75,14 @@ public class TransactionService {
         Double balanceSourceAccount = sourceAccount.getBalance();
         Account targetAccount = transaction.getTargetAccount();
         Double balanceTargetAccount = targetAccount.getBalance();
-        Double valor = transaction.getTransactionAmount();
+        Double amount = transaction.getTransactionAmount();
 
-        System.out.println(sourceAccount);
-        System.out.println(balanceSourceAccount);
-        System.out.println(targetAccount);
-        System.out.println(balanceTargetAccount);
-        System.out.println(valor);
+        transactionAmountGreaterThanZero(transaction);
 
-        if (accountService.sourceAccountExists(transaction) && accountService.targetAccountExists(transaction)) {
+        if (accountService.sourceAccountExists(transaction) && accountService.targetAccountExists(transaction) && sourceAccount != targetAccount) {
             if (sourceAccountIsNotNegative(transaction)) {
-                sourceAccount.setBalance((balanceSourceAccount - valor));
-                targetAccount.setBalance((balanceTargetAccount + valor));
+                sourceAccount.setBalance((balanceSourceAccount - amount));
+                targetAccount.setBalance((balanceTargetAccount + amount));
             } else
                 throw new ObjectNotFoundExcepetion("Current balance is less than transfer amount, maximum allowable transfer amount is:" + balanceSourceAccount);
         } else throw new ObjectNotFoundExcepetion("Source account or target account no exists");
@@ -97,13 +91,13 @@ public class TransactionService {
 
     public Account doTransaction(Transaction transaction) {
 
-        switch (transaction.getTypeTransaction()){
+        switch (transaction.getTypeTransaction()) {
             case WITHDRAW:
                 return withdraw(transaction);
             case DEPOSIT:
                 return deposit(transaction);
             case TRANSFER:
-               return transfer(transaction);
+                return transfer(transaction);
             default:
                 throw new ObjectNotFoundExcepetion("Type transaction is invalid");
         }
@@ -113,15 +107,21 @@ public class TransactionService {
         Account account = transaction.getSourceAccount();
         Double balance = account.getBalance();
         Double transactionAmount = transaction.getTransactionAmount();
-        if ((balance - transactionAmount) > 0) {
+        if ((balance - transactionAmount) >= 0) {
             return true;
         } else return false;
     }
 
-    public void delete(Integer id) {
-        find(id);
-        transactionRepository.deleteById(id);
+    public void transactionAmountGreaterThanZero(Transaction transaction){
+        Double amount = transaction.getTransactionAmount();
+        if(amount <= 0) throw new ObjectNotFoundExcepetion("The transaction amount must be greater than zero. ");
     }
 
+    public void delete(Client client) {
+        List<Transaction> transactionList = accountService.bankStatement(client.getAccount().getId());
+        for (Transaction transaction : transactionList) {
+            transactionRepository.deleteById(transaction.getId());
+        }
+    }
 
 }

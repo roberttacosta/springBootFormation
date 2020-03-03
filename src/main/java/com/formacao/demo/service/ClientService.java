@@ -2,9 +2,11 @@ package com.formacao.demo.service;
 
 import com.formacao.demo.domain.Account;
 import com.formacao.demo.domain.Client;
+import com.formacao.demo.domain.Transaction;
 import com.formacao.demo.dto.ClientNewDTO;
 import com.formacao.demo.repository.AccountRepository;
 import com.formacao.demo.repository.ClientRepository;
+import com.formacao.demo.repository.TransactionRepository;
 import com.formacao.demo.service.excepetion.ObjectNotFoundExcepetion;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -22,6 +24,8 @@ public class ClientService {
     private AccountRepository accountRepository;
     @Autowired
     private AccountService accountService;
+    @Autowired
+    private TransactionService transactionService;
 
     public Client find(Integer id) {
         Optional<Client> obj = clientRepository.findById(id);
@@ -31,6 +35,10 @@ public class ClientService {
     public Client findByCPF(String CPF) {
         Optional<Client> obj = Optional.ofNullable(clientRepository.findByCpf(CPF));
         return obj.orElseThrow(() -> new ObjectNotFoundExcepetion("Objeto não encontrado:" + CPF + ". Tipo:" + Client.class.getName()));
+    }
+
+    public List<Client> findAll() {
+        return clientRepository.findAll();
     }
 
     public Client insert(Client client) {
@@ -50,12 +58,9 @@ public class ClientService {
 
     public void deleteClientAccount(Integer id) {
         Client client = find(id);
+        transactionService.delete(client);
         clientRepository.deleteById(id);
         accountService.delete(client);
-    }
-
-    public List<Client> findAll() {
-        return clientRepository.findAll();
     }
 
     public Client buildClient(ClientNewDTO clientNewDTO) {

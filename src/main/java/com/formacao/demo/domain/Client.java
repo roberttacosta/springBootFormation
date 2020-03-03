@@ -21,12 +21,16 @@ public class Client implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
+
     @NotEmpty(message = "Preenchimento obrigatório")
     @Length(min = 5, max = 120, message = "O tamanho deve ser entre 5 e 120 caracteres")
     private String name;
+
     @NotEmpty(message = "Preenchimento obrigatório")
     @CPF
+    @Column (unique = true)
     private String cpf;
+
     @OneToOne
     @JoinColumn(name = "id_account")
     private Account account;
