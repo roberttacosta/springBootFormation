@@ -1,18 +1,14 @@
 package com.formacao.demo.controller;
 
-import com.formacao.demo.domain.Account;
 import com.formacao.demo.domain.Client;
 import com.formacao.demo.dto.ClientNewDTO;
-import com.formacao.demo.service.ClientService;
+import com.formacao.demo.service.impl.ClientServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import javax.validation.Valid;
-import java.net.URI;
 import java.util.List;
 
 @RestController
@@ -20,7 +16,7 @@ import java.util.List;
 public class ClientController {
 
     @Autowired
-    private ClientService clientService;
+    private ClientServiceImpl clientService;
 
     @RequestMapping(value="id/{id}", method = RequestMethod.GET)
     public ResponseEntity<Client> find(@PathVariable Integer id){
@@ -53,7 +49,6 @@ public class ClientController {
     @ResponseBody
     @ResponseStatus(HttpStatus.OK)
     public Client update(@Valid @RequestBody Client client, @PathVariable Integer id){
-        client.setId(id);
         return clientService.update(client);
     }
 

@@ -2,37 +2,42 @@ package com.formacao.demo.controller;
 
 import com.formacao.demo.domain.Account;
 import com.formacao.demo.domain.Transaction;
-import com.formacao.demo.service.AccountService;
+import com.formacao.demo.service.impl.AccountServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-import javax.validation.Valid;
-import java.net.URI;
 import java.util.List;
 
-@RestController
+@Controller
 @RequestMapping(value = "/accounts")
 public class AccountController {
-    @Autowired
-    private AccountService accountService;
 
-    @RequestMapping(value = "id/{id}", method = RequestMethod.GET)
-    public ResponseEntity<Account> find(@PathVariable Integer id) {
-        Account obj = accountService.find(id);
-        return ResponseEntity.ok().body(obj);
+    private AccountServiceImpl accountServiceImpl;
+
+    @Autowired
+    public AccountController(AccountServiceImpl accountServiceImpl){
+        this.accountServiceImpl = accountServiceImpl;
     }
 
-    @RequestMapping(method = RequestMethod.GET)
+    @GetMapping(value = "/{id}")
+    @ResponseBody
+    @ResponseStatus(HttpStatus.OK)
+    public Account find(@PathVariable Integer id) {
+        return accountServiceImpl.find(id);
+    }
+
+    @GetMapping
     public ResponseEntity<List<Account>> findAll() {
-        List<Account> list = accountService.findAll();
+        List<Account> list = accountServiceImpl.findAll();
         return ResponseEntity.ok().body(list);
     }
 
     @RequestMapping(value = "statement/{id}", method = RequestMethod.GET)
     public ResponseEntity<List<Transaction>> statement(@PathVariable Integer id) {
-        List<Transaction> list = accountService.bankStatement(id);
+        List<Transaction> list = accountServiceImpl.bankStatement(id);
         return ResponseEntity.ok().body(list);
     }
 

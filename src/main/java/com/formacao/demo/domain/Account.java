@@ -16,12 +16,16 @@ public class Account implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
+
     @JsonFormat(pattern = "dd/MM/yyyy HH:mm")
     private LocalDateTime dateCreation;
+
     private double balance;
+
     @JsonIgnore
     @OneToMany(mappedBy = "sourceAccount")
     private List<Transaction> transactionsSource;
+
     @JsonIgnore
     @OneToMany(mappedBy = "targetAccount")
     private List<Transaction> transactionTarget;
