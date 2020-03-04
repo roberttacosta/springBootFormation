@@ -1,21 +1,12 @@
 package com.formacao.demo.dto;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
-import org.hibernate.validator.constraints.Length;
-import org.hibernate.validator.constraints.br.CPF;
-
-import javax.validation.constraints.NotEmpty;
-import java.io.Serializable;
-import java.time.LocalDateTime;
-
-public class ClientNewDTO implements Serializable {
-    private static final long serialVersionUID = 1L;
+public class ClientNewDTO {
 
     private String name;
     private String cpf;
     private double balance;
 
-    public ClientNewDTO(){
+    public ClientNewDTO() {
 
     }
 

@@ -4,24 +4,26 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
-import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
 
 @Entity
-public class Account implements Serializable {
-    private static final long serialVersionUID = 1L;
+public class Account {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
+
     @JsonFormat(pattern = "dd/MM/yyyy HH:mm")
     private LocalDateTime dateCreation;
+
     private double balance;
+
     @JsonIgnore
     @OneToMany(mappedBy = "sourceAccount")
     private List<Transaction> transactionsSource;
+
     @JsonIgnore
     @OneToMany(mappedBy = "targetAccount")
     private List<Transaction> transactionTarget;

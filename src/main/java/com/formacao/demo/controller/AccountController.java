@@ -4,42 +4,49 @@ import com.formacao.demo.domain.Account;
 import com.formacao.demo.domain.Transaction;
 import com.formacao.demo.service.AccountService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.HttpStatus;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-import javax.validation.Valid;
-import java.net.URI;
+import java.time.LocalDateTime;
 import java.util.List;
 
-@RestController
+@Controller
 @RequestMapping(value = "/accounts")
 public class AccountController {
-    @Autowired
+
     private AccountService accountService;
 
-    @RequestMapping(value = "id/{id}", method = RequestMethod.GET)
-    public ResponseEntity<Account> find(@PathVariable Integer id) {
-        Account obj = accountService.find(id);
-        return ResponseEntity.ok().body(obj);
+    @Autowired
+    public AccountController(AccountService accountService) {
+        this.accountService = accountService;
     }
 
-    @RequestMapping(method = RequestMethod.GET)
-    public ResponseEntity<List<Account>> findAll() {
-        List<Account> list = accountService.findAll();
-        return ResponseEntity.ok().body(list);
+    @GetMapping(value = "/{id}")
+    @ResponseBody
+    @ResponseStatus(HttpStatus.OK)
+    public Account find(@PathVariable Integer id) {
+        return accountService.find(id);
     }
 
-    @RequestMapping(value = "statement/{id}", method = RequestMethod.GET)
-    public ResponseEntity<List<Transaction>> statement(@PathVariable Integer id) {
-        List<Transaction> list = accountService.bankStatement(id);
-        return ResponseEntity.ok().body(list);
+    @GetMapping
+    @ResponseBody
+    @ResponseStatus(HttpStatus.OK)
+    public List<Account> findAll() {
+        return accountService.findAll();
     }
 
-//    @RequestMapping (method = RequestMethod.POST)
-//    public ResponseEntity<Void> insert(@Valid @RequestBody Account obj){
-//        Account account = accountService.insert(obj);
-//        URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(account.getId()).toUri();
-//        return ResponseEntity.created(uri).build();
-//    }
+    @GetMapping(value = "statement/{id}")
+    @ResponseBody
+    @ResponseStatus(HttpStatus.OK)
+    public List<Transaction> statement(@PathVariable Integer id) {
+        return accountService.bankStatement(id);
+    }
+
+    @GetMapping(value = "statement/intialDate={dtInic}&finalDate={dtFinal}")
+    @ResponseBody
+    @ResponseStatus(HttpStatus.OK)
+    public List<Transaction> statementByDate(@PathVariable LocalDateTime dtInic, LocalDateTime dtFinal) {
+        return accountService.bankStatementByDate(dtInic, dtFinal);
+    }
 }
