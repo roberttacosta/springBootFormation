@@ -15,8 +15,7 @@ import java.util.Date;
 import java.util.Objects;
 
 @Entity
-public class Client implements Serializable {
-    private static final long serialVersionUID = 1L;
+public class Client {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -28,7 +27,7 @@ public class Client implements Serializable {
 
     @NotEmpty(message = "Preenchimento obrigatório")
     @CPF
-    @Column (unique = true)
+    @Column(unique = true)
     private String cpf;
 
     @OneToOne

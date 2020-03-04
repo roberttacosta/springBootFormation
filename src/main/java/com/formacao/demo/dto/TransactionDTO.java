@@ -2,10 +2,7 @@ package com.formacao.demo.dto;
 
 import com.formacao.demo.domain.enums.TypeTransaction;
 
-import java.io.Serializable;
-
-public class TransactionDTO implements Serializable {
-    private static final long serialVersionUID = 1L;
+public class TransactionDTO {
 
     private int idSourceAccount;
     private int idTargetAccount;
