@@ -31,8 +31,9 @@ public class AccountServiceImpl implements AccountService {
 
     @Override
     public Account find(Integer id) {
-        Optional<Account> obj = accountRepository.findById(id);
-        return obj.orElseThrow(() -> new ObjectNotFoundExcepetion("Objeto não encontrado:" + id + ". Tipo:" + Account.class.getName()));
+
+        return accountRepository.findById(id)
+                .orElseThrow(() -> new ObjectNotFoundExcepetion("Objeto não encontrado:" + id + ". Tipo:" + Account.class.getName()));
     }
 
     @Override

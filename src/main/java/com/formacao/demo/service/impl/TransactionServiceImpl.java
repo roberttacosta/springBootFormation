@@ -35,7 +35,7 @@ public class TransactionServiceImpl implements TransactionService {
     @Override
     public Transaction insert(TransactionDTO transactionDTO) {
         Account sourceAccount = accountService.find(transactionDTO.getIdSourceAccount());
-        Account targetAccount = transactionDTO.getIdTargetAccount() == 0 ? null : accountService.find(transactionDTO.getIdTargetAccount());
+        Account targetAccount = transactionDTO.getIdTargetAccount() == null ? null : accountService.find(transactionDTO.getIdTargetAccount());
 
         Transaction transaction = this.buildTransaction(transactionDTO, sourceAccount, targetAccount);
 
