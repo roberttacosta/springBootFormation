@@ -8,6 +8,7 @@ import com.formacao.demo.service.impl.TransactionServiceImpl;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.ArgumentMatchers;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
@@ -44,8 +45,8 @@ public class TransactionServiceImplTest {
     }
 
     @Test
-    public void insert_caseCreateNewTransactionReturnSuccess(){
-        Mockito.when(transactionRepository.save(transaction)).thenReturn(transaction);
+    public void insert_caseCreateNewTransactionDepositReturnSuccess(){
+        Mockito.when(transactionRepository.save(ArgumentMatchers.any(Transaction.class))).thenReturn(transaction);
 
 
     }
