@@ -1,12 +1,12 @@
 package com.formacao.demo.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.formacao.demo.domain.enums.TypeTransaction;
+import org.springframework.hateoas.ResourceSupport;
 
 import javax.persistence.*;
-import java.io.Serializable;
 import java.time.LocalDateTime;
-import java.util.Date;
 import java.util.Objects;
 
 @Entity

@@ -15,7 +15,7 @@ public interface AccountService {
 
     List<Transaction> bankStatement(Integer id);
 
-//    List<Transaction> bankStatementByDate(LocalDateTime dtInic, LocalDateTime dtFinal);
+//    List<Transaction> bankStatementByDate(LocalDateTime startDate, LocalDateTime endDate);
 
     Account updateBalance(Account account);
 

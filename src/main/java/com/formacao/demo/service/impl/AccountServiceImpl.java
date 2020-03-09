@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -47,8 +48,8 @@ public class AccountServiceImpl implements AccountService {
     }
 
 //    @Override
-//    public List<Transaction> bankStatementByDate(LocalDateTime dtInic, LocalDateTime dtFinal) {
-//        return transactionService.findByDate(dtInic, dtFinal);
+//    public List<Transaction> bankStatementByDate(LocalDateTime startDate, LocalDateTime endDate) {
+//        return transactionService.findByDate(startDate, endDate);
 //    }
 
     @Override

@@ -9,10 +9,15 @@ import com.formacao.demo.service.AccountService;
 import com.formacao.demo.service.TransactionService;
 import com.formacao.demo.service.excepetion.ObjectNotFoundExcepetion;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.hateoas.Link;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
+
+import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
+import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
 
 @Service
 public class TransactionServiceImpl implements TransactionService {
@@ -45,12 +50,12 @@ public class TransactionServiceImpl implements TransactionService {
 
     @Override
     public List<Transaction> findAllBySourceAccount(Account account) {
-        return transactionRepository.findAllBySourceAccount(account);
+       return transactionRepository.findAllBySourceAccount(account);
     }
 
 //    @Override
-//    public List<Transaction> findByDate (LocalDateTime dtInic, LocalDateTime dtFinal) {
-//        return transactionRepository.findByDate(dtInic, dtFinal);
+//    public List<Transaction> findByDate (LocalDateTime startDate, LocalDateTime endDate) {
+//        return transactionRepository.findByDate(startDate, endDate);
 //    }
 
     @Override

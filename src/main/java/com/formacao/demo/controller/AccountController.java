@@ -43,10 +43,10 @@ public class AccountController {
         return accountService.bankStatement(id);
     }
 
-//    @GetMapping(value = "statement/intialDate={dtInic}&finalDate={dtFinal}")
+//    @GetMapping(value = "statement/dateinitial/{dtInic}/to/{}")
 //    @ResponseBody
 //    @ResponseStatus(HttpStatus.OK)
-//    public List<Transaction> statementByDate(@PathVariable LocalDateTime dtInic, LocalDateTime dtFinal) {
-//        return accountService.bankStatementByDate(dtInic, dtFinal);
+//    public List<Transaction> statementByDate(@PathVariable LocalDateTime dtInic) {
+//        return accountService.bankStatementByDate(dtInic);
 //    }
 }
