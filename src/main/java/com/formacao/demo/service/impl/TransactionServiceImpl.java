@@ -46,6 +46,7 @@ public class TransactionServiceImpl implements TransactionService {
 
         this.updateBalanceByTransaction(doTransaction(transaction));
         return transactionRepository.save(transaction);
+
     }
 
     @Override
@@ -90,7 +91,6 @@ public class TransactionServiceImpl implements TransactionService {
 
     private Account withdraw(Transaction transaction) {
         this.checkIfTransactionAmountGreaterThanZero(transaction);
-        this.checkIfAccountExists(transaction.getSourceAccount());
         this.checkIfSourceAccountIsNotNegative(transaction);
 
         transaction.getSourceAccount().setBalance((transaction.getSourceAccount().getBalance() - transaction.getTransactionAmount()));
@@ -100,17 +100,16 @@ public class TransactionServiceImpl implements TransactionService {
 
     private Account deposit(Transaction transaction) {
         this.checkIfTransactionAmountGreaterThanZero(transaction);
-        this.checkIfAccountExists(transaction.getSourceAccount());
 
-        transaction.getSourceAccount().setBalance(transaction.getSourceAccount().getBalance() + transaction.getTransactionAmount());
+        transaction.getSourceAccount().setBalance(
+                transaction.getSourceAccount().getBalance() + transaction.getTransactionAmount()
+        );
 
         return transaction.getSourceAccount();
     }
 
     private Account transfer(Transaction transaction) {
         this.checkIfTransactionAmountGreaterThanZero(transaction);
-        this.checkIfAccountExists(transaction.getSourceAccount());
-        this.checkIfAccountExists(transaction.getTargetAccount());
         this.checkIfSourceAccountIsTheSameTargetAccount(transaction);
         this.checkIfSourceAccountIsNotNegative(transaction);
 
@@ -123,10 +122,6 @@ public class TransactionServiceImpl implements TransactionService {
     private void checkIfSourceAccountIsTheSameTargetAccount(Transaction transaction) {
         if (transaction.getSourceAccount() == transaction.getTargetAccount())
             throw new ObjectNotFoundExcepetion("The target account cannot be the same as the source account");
-    }
-
-    private void checkIfAccountExists(Account account) {
-        accountService.find(account.getId());
     }
 
     private void checkIfSourceAccountIsNotNegative(Transaction transaction) {
