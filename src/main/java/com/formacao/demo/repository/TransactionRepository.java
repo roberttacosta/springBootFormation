@@ -16,6 +16,6 @@ import java.util.List;
 public interface TransactionRepository extends CrudRepository<Transaction, Integer> {
     List<Transaction> findAllBySourceAccount(Account account);
 
-//    @Query ("SELECT t FROM Transaction t WHERE t.transactionDate <= :dtFinal ")
-//    List<Transaction> findByDate(@Param("dtFinal") LocalDateTime dtFinal);
+//    @Query (value = "SELECT * FROM Transaction t WHERE t.transactionDate BETWEEN ':startDate' AND ':endDate'", nativeQuery = true)
+//    List<Transaction> findByDate(@Param("startDate") LocalDateTime startDate, @Param("endDate") LocalDateTime endDate);
 }

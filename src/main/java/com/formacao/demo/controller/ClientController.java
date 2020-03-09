@@ -3,10 +3,9 @@ package com.formacao.demo.controller;
 import com.formacao.demo.domain.Client;
 import com.formacao.demo.dto.ClientNewDTO;
 import com.formacao.demo.service.ClientService;
-import com.formacao.demo.service.impl.ClientServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.hateoas.ResourceSupport;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -14,7 +13,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping(value = "/clients")
-public class ClientController {
+public class ClientController extends ResourceSupport {
     private ClientService clientService;
 
     @Autowired

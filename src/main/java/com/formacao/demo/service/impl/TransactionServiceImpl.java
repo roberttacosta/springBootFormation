@@ -9,10 +9,15 @@ import com.formacao.demo.service.AccountService;
 import com.formacao.demo.service.TransactionService;
 import com.formacao.demo.service.excepetion.ObjectNotFoundExcepetion;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.hateoas.Link;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
+
+import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
+import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
 
 @Service
 public class TransactionServiceImpl implements TransactionService {
@@ -35,22 +40,23 @@ public class TransactionServiceImpl implements TransactionService {
     @Override
     public Transaction insert(TransactionDTO transactionDTO) {
         Account sourceAccount = accountService.find(transactionDTO.getIdSourceAccount());
-        Account targetAccount = transactionDTO.getIdTargetAccount() == 0 ? null : accountService.find(transactionDTO.getIdTargetAccount());
+        Account targetAccount = transactionDTO.getIdTargetAccount() == null ? null : accountService.find(transactionDTO.getIdTargetAccount());
 
         Transaction transaction = this.buildTransaction(transactionDTO, sourceAccount, targetAccount);
 
         this.updateBalanceByTransaction(doTransaction(transaction));
         return transactionRepository.save(transaction);
+
     }
 
     @Override
     public List<Transaction> findAllBySourceAccount(Account account) {
-        return transactionRepository.findAllBySourceAccount(account);
+       return transactionRepository.findAllBySourceAccount(account);
     }
 
 //    @Override
-//    public List<Transaction> findByDate (LocalDateTime dtInic, LocalDateTime dtFinal) {
-//        return transactionRepository.findByDate(dtInic, dtFinal);
+//    public List<Transaction> findByDate (LocalDateTime startDate, LocalDateTime endDate) {
+//        return transactionRepository.findByDate(startDate, endDate);
 //    }
 
     @Override
@@ -85,7 +91,6 @@ public class TransactionServiceImpl implements TransactionService {
 
     private Account withdraw(Transaction transaction) {
         this.checkIfTransactionAmountGreaterThanZero(transaction);
-        this.checkIfAccountExists(transaction.getSourceAccount());
         this.checkIfSourceAccountIsNotNegative(transaction);
 
         transaction.getSourceAccount().setBalance((transaction.getSourceAccount().getBalance() - transaction.getTransactionAmount()));
@@ -95,17 +100,16 @@ public class TransactionServiceImpl implements TransactionService {
 
     private Account deposit(Transaction transaction) {
         this.checkIfTransactionAmountGreaterThanZero(transaction);
-        this.checkIfAccountExists(transaction.getSourceAccount());
 
-        transaction.getSourceAccount().setBalance(transaction.getSourceAccount().getBalance() + transaction.getTransactionAmount());
+        transaction.getSourceAccount().setBalance(
+                transaction.getSourceAccount().getBalance() + transaction.getTransactionAmount()
+        );
 
         return transaction.getSourceAccount();
     }
 
     private Account transfer(Transaction transaction) {
         this.checkIfTransactionAmountGreaterThanZero(transaction);
-        this.checkIfAccountExists(transaction.getSourceAccount());
-        this.checkIfAccountExists(transaction.getTargetAccount());
         this.checkIfSourceAccountIsTheSameTargetAccount(transaction);
         this.checkIfSourceAccountIsNotNegative(transaction);
 
@@ -118,10 +122,6 @@ public class TransactionServiceImpl implements TransactionService {
     private void checkIfSourceAccountIsTheSameTargetAccount(Transaction transaction) {
         if (transaction.getSourceAccount() == transaction.getTargetAccount())
             throw new ObjectNotFoundExcepetion("The target account cannot be the same as the source account");
-    }
-
-    private void checkIfAccountExists(Account account) {
-        accountService.find(account.getId());
     }
 
     private void checkIfSourceAccountIsNotNegative(Transaction transaction) {

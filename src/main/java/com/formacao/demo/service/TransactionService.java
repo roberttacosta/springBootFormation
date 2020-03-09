@@ -18,5 +18,5 @@ public interface TransactionService {
 
     void delete(Client client);
 
-//    List<Transaction> findByDate (LocalDateTime dtInic, LocalDateTime dtFinal);
+//    List<Transaction> findByDate (LocalDateTime startDate, LocalDateTime endDate);
 }
