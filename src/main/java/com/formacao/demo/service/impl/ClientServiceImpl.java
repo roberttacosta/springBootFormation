@@ -58,11 +58,12 @@ public class ClientServiceImpl implements ClientService {
     }
 
     @Override
-    public void deleteClientAccountTransaction(Integer id) {
+    public Client deleteClientAccountTransaction(Integer id) {
         Client client = find(id);
         transactionService.delete(client);
         clientRepository.deleteById(id);
         accountService.delete(client);
+        return client;
     }
 
     @Override
