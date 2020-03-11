@@ -1,36 +1,37 @@
-package com.formacao.demo.integration.response;
+package com.formacao.demo.domain;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.annotation.JsonProperty;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.ManyToMany;
+import java.util.*;
 
-import java.io.Serializable;
-import java.util.List;
-
-public class OMDBResponse implements Serializable {
-    @JsonProperty(value = "Title")
+@Entity
+public class OMDB {
     private String Title;
-    @JsonProperty(value = "Year")
     private String Year;
-    @JsonProperty(value = "Genre")
     private String Genre;
-    @JsonProperty(value = "Director")
     private String Director;
-    @JsonProperty(value = "Writer")
     private String Writer;
-    @JsonProperty(value = "Actors")
     private String Actors;
-    @JsonProperty(value = "Plot")
     private String Plot;
-    @JsonProperty(value = "Language")
     private String Language;
-    @JsonProperty(value = "Country")
     private String Country;
-    @JsonProperty(value = "Poster")
     private String Poster;
-    @JsonProperty(value = "imdbID")
+    @Id
     private String imdbID;
-    @JsonProperty(value = "Type")
     private String Type;
+    private Double Value;
+
+    @ManyToMany(mappedBy = "omdbs")
+    private List<Client> clients = new ArrayList<>();
+
+    public Double getValue() {
+        return Value;
+    }
+
+    public void setValue(Double value) {
+        Value = value;
+    }
 
     public String getTitle() {
         return Title;
@@ -126,5 +127,18 @@ public class OMDBResponse implements Serializable {
 
     public void setType(String type) {
         Type = type;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        OMDB omdb = (OMDB) o;
+        return Objects.equals(imdbID, omdb.imdbID);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(imdbID);
     }
 }

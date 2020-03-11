@@ -1,10 +1,14 @@
 package com.formacao.demo.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.br.CPF;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 @Entity
@@ -26,6 +30,11 @@ public class Client {
     @OneToOne
     @JoinColumn(name = "id_account")
     private Account account;
+
+    @JsonIgnore
+    @ManyToMany
+    @JoinTable(name = "MOVIE_CLIENT", joinColumns = @JoinColumn(name = "name_client"), inverseJoinColumns = @JoinColumn(name = "name_movie"))
+    private List<OMDB> omdbs = new ArrayList<>();
 
     public Client() {
 

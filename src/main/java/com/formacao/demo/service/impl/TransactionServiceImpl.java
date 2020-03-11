@@ -16,16 +16,16 @@ import java.util.List;
 
 @Service
 public class TransactionServiceImpl implements TransactionService {
-    @Autowired
+//    @Autowired
     private TransactionRepository transactionRepository;
-    @Autowired
+//    @Autowired
     private AccountService accountService;
 
-//    @Autowired
-//    public TransactionServiceImpl(TransactionRepository transactionRepository, AccountService accountService) {
-//        this.transactionRepository = transactionRepository;
-//        this.accountService = accountService;
-//    }
+    @Autowired
+    public TransactionServiceImpl(TransactionRepository transactionRepository, AccountService accountService) {
+        this.transactionRepository = transactionRepository;
+        this.accountService = accountService;
+    }
 
     @Override
     public Transaction find(Integer id) {

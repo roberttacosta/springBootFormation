@@ -2,6 +2,7 @@ package com.formacao.demo.controller;
 
 import com.formacao.demo.domain.Client;
 import com.formacao.demo.dto.ClientNewDTO;
+import com.formacao.demo.integration.configuration.OMDBApi;
 import com.formacao.demo.service.ClientService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -38,8 +39,11 @@ public class ClientController{
     @ResponseBody
     @ResponseStatus(HttpStatus.OK)
     public Client findByCPF(@PathVariable String CPF) {
+
         return clientService.findByCPF(CPF);
     }
+
+
 
     @PostMapping
     @ResponseBody

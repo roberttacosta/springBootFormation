@@ -14,16 +14,16 @@ import java.util.List;
 
 @Service
 public class AccountServiceImpl implements AccountService {
-    @Autowired
+//    @Autowired
     private AccountRepository accountRepository;
-    @Autowired
+//    @Autowired
     private TransactionService transactionService;
 
-//    @Autowired
-//    public AccountServiceImpl(AccountRepository accountRepository, TransactionService transactionService) {
-//        this.accountRepository = accountRepository;
-//        this.transactionService = transactionService;
-//    }
+    @Autowired
+    public AccountServiceImpl(AccountRepository accountRepository, TransactionService transactionService) {
+        this.accountRepository = accountRepository;
+        this.transactionService = transactionService;
+    }
 
 
     @Override
