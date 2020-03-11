@@ -4,17 +4,13 @@ import com.formacao.demo.domain.Account;
 import com.formacao.demo.domain.Client;
 import com.formacao.demo.domain.Transaction;
 import com.formacao.demo.repository.AccountRepository;
-import com.formacao.demo.repository.TransactionRepository;
+import com.formacao.demo.service.AccountService;
 import com.formacao.demo.service.TransactionService;
 import com.formacao.demo.service.excepetion.ObjectNotFoundExcepetion;
-import com.formacao.demo.service.AccountService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class AccountServiceImpl implements AccountService {
@@ -24,7 +20,7 @@ public class AccountServiceImpl implements AccountService {
     private TransactionService transactionService;
 
     @Autowired
-    public void setTransactionService(AccountRepository accountRepository, TransactionService transactionService) {
+    public AccountServiceImpl(AccountRepository accountRepository, TransactionService transactionService) {
         this.accountRepository = accountRepository;
         this.transactionService = transactionService;
     }
