@@ -17,8 +17,6 @@ public interface AccountService {
 
 //    List<Transaction> bankStatementByDate(LocalDateTime startDate, LocalDateTime endDate);
 
-    Account updateBalance(Account account);
-
     void delete(Client client);
 
     Account create(Client client);

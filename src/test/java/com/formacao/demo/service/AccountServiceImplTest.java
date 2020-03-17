@@ -62,8 +62,6 @@ public class AccountServiceImplTest {
         thrown.expect(ObjectNotFoundExcepetion.class);
         thrown.expectMessage("Objeto não encontrado:" + 783 + ". Tipo:" + Account.class.getName());
 
-
-       accountServiceImpl.find(783);
+        accountServiceImpl.find(783);
     }
-
 }

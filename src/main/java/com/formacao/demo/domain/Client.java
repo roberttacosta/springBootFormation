@@ -79,6 +79,14 @@ public class Client {
         this.account = account;
     }
 
+    public List<OMDB> getOmdbs() {
+        return omdbs;
+    }
+
+    public void setOmdbs(List<OMDB> omdbs) {
+        this.omdbs = omdbs;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

@@ -14,17 +14,10 @@ import java.util.List;
 
 @Service
 public class AccountServiceImpl implements AccountService {
-//    @Autowired
-    private AccountRepository accountRepository;
-//    @Autowired
-    private TransactionService transactionService;
-
     @Autowired
-    public AccountServiceImpl(AccountRepository accountRepository, TransactionService transactionService) {
-        this.accountRepository = accountRepository;
-        this.transactionService = transactionService;
-    }
-
+    private AccountRepository accountRepository;
+    @Autowired
+    private TransactionService transactionService;
 
     @Override
     public Account find(Integer id) {
@@ -47,11 +40,6 @@ public class AccountServiceImpl implements AccountService {
 //    public List<Transaction> bankStatementByDate(LocalDateTime startDate, LocalDateTime endDate) {
 //        return transactionService.findByDate(startDate, endDate);
 //    }
-
-    @Override
-    public Account updateBalance(Account account) {
-        return accountRepository.save(account);
-    }
 
     @Override
     public void delete(Client client) {

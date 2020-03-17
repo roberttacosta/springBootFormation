@@ -5,15 +5,20 @@ import com.formacao.demo.domain.Transaction;
 import com.formacao.demo.domain.enums.TypeTransaction;
 import com.formacao.demo.dto.TransactionDTO;
 import com.formacao.demo.repository.TransactionRepository;
+import com.formacao.demo.service.excepetion.ObjectNotFoundExcepetion;
 import com.formacao.demo.service.impl.TransactionServiceImpl;
+import org.hamcrest.CoreMatchers;
 import org.junit.Assert;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.mockito.*;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.time.LocalDateTime;
+import java.util.Optional;
 
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
@@ -29,9 +34,15 @@ public class TransactionServiceImplTest {
     @Mock
     private AccountService accountService;
 
+    @Rule
+    public ExpectedException thrown = ExpectedException.none();
+
     private Transaction transaction;
     private TransactionDTO transactionDTO;
     private Account sourceAccount, targetAccount;
+    private Double transactionAmountNormal = 50.00;
+    private Double transactionAmountGreaterThanZero = -20.00;
+    private Double transactionAmountIsNotNegative = 180.00;
 
     @Before
     public void setUp() {
@@ -39,15 +50,14 @@ public class TransactionServiceImplTest {
         targetAccount = buildTargetAccount();
         transaction = buildTransaction();
         transactionDTO = buildTransactionDTO();
-
     }
 
     private Transaction buildTransaction() {
-        return new Transaction(123, null, null, 200.00, LocalDateTime.now(), null);
+        return new Transaction(123, null, null, 0.00, LocalDateTime.now(), null);
     }
 
     private TransactionDTO buildTransactionDTO() {
-        return new TransactionDTO(null, null, 200.00, null);
+        return new TransactionDTO(null, null, 0.00, null);
     }
 
     private Account buildSourceAccount() {
@@ -60,15 +70,152 @@ public class TransactionServiceImplTest {
 
     @Test
     public void insert_caseCreateNewTransactionDepositReturnSuccess() {
-        transactionDTO.setTypeTransaction(TypeTransaction.DEPOSIT);
         transactionDTO.setIdSourceAccount(sourceAccount.getId());
+        transactionDTO.setTransactionAmount(transactionAmountNormal);
+        transactionDTO.setTypeTransaction(TypeTransaction.DEPOSIT);
+
         when(accountService.find(transactionDTO.getIdSourceAccount())).thenReturn(sourceAccount);
         when(transactionRepository.save(any(Transaction.class))).thenReturn(transaction);
-        ArgumentCaptor<Account> argumentCaptor = ArgumentCaptor.forClass(Account.class);
+
+        ArgumentCaptor<Transaction> argumentCaptor = ArgumentCaptor.forClass(Transaction.class);
 
         transactionServiceImpl.insert(transactionDTO);
 
-        verify(accountService, times(1)).updateBalance(argumentCaptor.capture());
-        Assert.assertTrue( 350.00 == argumentCaptor.getValue().getBalance());
+        verify(transactionRepository, times(1)).save(argumentCaptor.capture());
+        Assert.assertTrue(sourceAccount.getBalance() == argumentCaptor.getValue().getSourceAccount().getBalance());
     }
+
+    @Test
+    public void insert_caseCreateNewTransactionDepositReturnExceptionGreaterThanZero() {
+        transactionDTO.setIdSourceAccount(sourceAccount.getId());
+        transactionDTO.setTransactionAmount(transactionAmountGreaterThanZero);
+        transactionDTO.setTypeTransaction(TypeTransaction.DEPOSIT);
+
+        when(accountService.find(transactionDTO.getIdSourceAccount())).thenReturn(sourceAccount);
+        when(transactionRepository.save(any(Transaction.class))).thenReturn(transaction);
+
+        thrown.expect(ObjectNotFoundExcepetion.class);
+        thrown.expectMessage("The transaction amount must be greater than zero.");
+
+        transactionServiceImpl.insert(transactionDTO);
+    }
+
+    @Test
+    public void insert_caseCreateNewTransactionWithdrawReturnSuccess() {
+        transactionDTO.setIdSourceAccount(sourceAccount.getId());
+        transactionDTO.setTransactionAmount(transactionAmountNormal);
+        transactionDTO.setTypeTransaction(TypeTransaction.WITHDRAW);
+
+        when(accountService.find(transactionDTO.getIdSourceAccount())).thenReturn(sourceAccount);
+        when(transactionRepository.save(transaction)).thenReturn(transaction);
+
+        ArgumentCaptor<Transaction> argumentCaptor = ArgumentCaptor.forClass(Transaction.class);
+
+        transactionServiceImpl.insert(transactionDTO);
+        verify(transactionRepository, times(1)).save(argumentCaptor.capture());
+
+        Assert.assertTrue(sourceAccount.getBalance() == argumentCaptor.getValue().getSourceAccount().getBalance());
+    }
+
+    @Test
+    public void insert_caseCreateNewTransactionWithdrawReturnExceptionGreaterThanZero() {
+        transactionDTO.setIdSourceAccount(sourceAccount.getId());
+        transactionDTO.setTransactionAmount(transactionAmountGreaterThanZero);
+        transactionDTO.setTypeTransaction(TypeTransaction.WITHDRAW);
+
+        when(accountService.find(transactionDTO.getIdSourceAccount())).thenReturn(sourceAccount);
+        when(transactionRepository.save(transaction)).thenReturn(transaction);
+
+        thrown.expect(ObjectNotFoundExcepetion.class);
+        thrown.expectMessage("The transaction amount must be greater than zero.");
+
+        transactionServiceImpl.insert(transactionDTO);
+    }
+
+    @Test
+    public void insert_caseCreateNewTransactionWithdrawReturnExceptionIsNotNegative() {
+        transactionDTO.setIdSourceAccount(sourceAccount.getId());
+        transactionDTO.setTransactionAmount(transactionAmountIsNotNegative);
+        transactionDTO.setTypeTransaction(TypeTransaction.WITHDRAW);
+
+        when(accountService.find(transactionDTO.getIdSourceAccount())).thenReturn(sourceAccount);
+        when(transactionRepository.save(transaction)).thenReturn(transaction);
+
+        thrown.expect(ObjectNotFoundExcepetion.class);
+        thrown.expectMessage("Current balance is less than transaction amount, maximum allowable transaction amount is:" + sourceAccount.getBalance());
+
+        transactionServiceImpl.insert(transactionDTO);
+    }
+
+    @Test
+    public void insert_caseCreateNewTransactionTransferReturnSuccess() {
+        transactionDTO.setTypeTransaction(TypeTransaction.TRANSFER);
+        transactionDTO.setIdSourceAccount(sourceAccount.getId());
+        transactionDTO.setIdTargetAccount(targetAccount.getId());
+        transactionDTO.setTransactionAmount(transactionAmountNormal);
+
+        when(accountService.find(transactionDTO.getIdSourceAccount())).thenReturn(sourceAccount);
+        when(accountService.find(transactionDTO.getIdTargetAccount())).thenReturn(targetAccount);
+        when(transactionRepository.save(transaction)).thenReturn(transaction);
+
+        ArgumentCaptor<Transaction> argumentCaptor = ArgumentCaptor.forClass(Transaction.class);
+
+        transactionServiceImpl.insert(transactionDTO);
+        verify(transactionRepository, times(1)).save(argumentCaptor.capture());
+
+        Assert.assertTrue(sourceAccount.getBalance() == argumentCaptor.getValue().getSourceAccount().getBalance());
+        Assert.assertTrue(targetAccount.getBalance() == argumentCaptor.getValue().getTargetAccount().getBalance());
+    }
+
+    @Test
+    public void insert_caseCreateNewTransactionTransferReturnExceptionGreaterThanZero() {
+        transactionDTO.setIdSourceAccount(sourceAccount.getId());
+        transactionDTO.setIdTargetAccount(targetAccount.getId());
+        transactionDTO.setTransactionAmount(transactionAmountGreaterThanZero);
+        transactionDTO.setTypeTransaction(TypeTransaction.WITHDRAW);
+
+        when(accountService.find(transactionDTO.getIdSourceAccount())).thenReturn(sourceAccount);
+        when(accountService.find(transactionDTO.getIdTargetAccount())).thenReturn(targetAccount);
+        when(transactionRepository.save(transaction)).thenReturn(transaction);
+
+        thrown.expect(ObjectNotFoundExcepetion.class);
+        thrown.expectMessage("The transaction amount must be greater than zero.");
+
+        transactionServiceImpl.insert(transactionDTO);
+    }
+
+    @Test
+    public void insert_caseCreateNewTransactionTransferReturnExceptionIsNotNegative() {
+        transactionDTO.setIdSourceAccount(sourceAccount.getId());
+        transactionDTO.setIdTargetAccount(targetAccount.getId());
+        transactionDTO.setTransactionAmount(transactionAmountIsNotNegative);
+        transactionDTO.setTypeTransaction(TypeTransaction.WITHDRAW);
+
+        when(accountService.find(transactionDTO.getIdSourceAccount())).thenReturn(sourceAccount);
+        when(accountService.find(transactionDTO.getIdTargetAccount())).thenReturn(targetAccount);
+        when(transactionRepository.save(transaction)).thenReturn(transaction);
+
+        thrown.expect(ObjectNotFoundExcepetion.class);
+        thrown.expectMessage("Current balance is less than transaction amount, maximum allowable transaction amount is:" + sourceAccount.getBalance());
+
+        transactionServiceImpl.insert(transactionDTO);
+    }
+
+    @Test
+    public void insert_caseCreateNewTransactionTransferReturnExceptionIsTheSameTargetAccount() {
+        transactionDTO.setIdSourceAccount(sourceAccount.getId());
+        transactionDTO.setIdTargetAccount(sourceAccount.getId());
+        transactionDTO.setTransactionAmount(transactionAmountNormal);
+        transactionDTO.setTypeTransaction(TypeTransaction.TRANSFER);
+
+        when(accountService.find(transactionDTO.getIdSourceAccount())).thenReturn(sourceAccount);
+//        when(accountService.find(transactionDTO.getIdTargetAccount())).thenReturn(sourceAccount);
+        when(transactionRepository.save(transaction)).thenReturn(transaction);
+
+//        thrown.expect(ObjectNotFoundExcepetion.class);
+//        thrown.expectMessage("The target account cannot be the same as the source account");
+
+        transactionServiceImpl.insert(transactionDTO);
+    }
+
 }

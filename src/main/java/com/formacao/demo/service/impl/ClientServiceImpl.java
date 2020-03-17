@@ -22,7 +22,6 @@ public class ClientServiceImpl implements ClientService {
     private AccountService accountService;
     private TransactionService transactionService;
 
-    @Autowired
     public ClientServiceImpl(ClientRepository clientRepository, AccountService accountService, TransactionService transactionService) {
         this.clientRepository = clientRepository;
         this.accountService = accountService;

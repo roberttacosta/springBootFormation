@@ -16,12 +16,10 @@ import java.util.List;
 
 @Service
 public class TransactionServiceImpl implements TransactionService {
-//    @Autowired
+
     private TransactionRepository transactionRepository;
-//    @Autowired
     private AccountService accountService;
 
-    @Autowired
     public TransactionServiceImpl(TransactionRepository transactionRepository, AccountService accountService) {
         this.transactionRepository = transactionRepository;
         this.accountService = accountService;
@@ -40,8 +38,9 @@ public class TransactionServiceImpl implements TransactionService {
 
         Transaction transaction = this.buildTransaction(transactionDTO, sourceAccount, targetAccount);
 
-        this.updateBalanceByTransaction(doTransaction(transaction));
-        return transactionRepository.save(transaction);
+        this.doTransaction(transaction);
+        transactionRepository.save(transaction);
+        return transaction;
 
     }
 
@@ -66,10 +65,6 @@ public class TransactionServiceImpl implements TransactionService {
 
     private Transaction buildTransaction(TransactionDTO transactionDTO, Account sourceAccount, Account targetAccount) {
         return new Transaction(null, sourceAccount, targetAccount, transactionDTO.getTransactionAmount(), LocalDateTime.now(), transactionDTO.getTypeTransaction());
-    }
-
-    private void updateBalanceByTransaction(Account account) {
-        accountService.updateBalance(account);
     }
 
     private Account doTransaction(Transaction transaction) {
@@ -127,6 +122,6 @@ public class TransactionServiceImpl implements TransactionService {
 
     private void checkIfTransactionAmountGreaterThanZero(Transaction transaction) {
         if (transaction.getTransactionAmount() <= 0)
-            throw new ObjectNotFoundExcepetion("The transaction amount must be greater than zero. ");
+            throw new ObjectNotFoundExcepetion("The transaction amount must be greater than zero.");
     }
 }

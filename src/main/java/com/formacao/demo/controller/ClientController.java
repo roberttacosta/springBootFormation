@@ -43,8 +43,6 @@ public class ClientController{
         return clientService.findByCPF(CPF);
     }
 
-
-
     @PostMapping
     @ResponseBody
     @ResponseStatus(HttpStatus.CREATED)

@@ -3,114 +3,129 @@ package com.formacao.demo.domain;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.ManyToMany;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
 
 @Entity
 public class OMDB {
-    private String Title;
-    private String Year;
-    private String Genre;
-    private String Director;
-    private String Writer;
-    private String Actors;
-    private String Plot;
-    private String Language;
-    private String Country;
-    private String Poster;
+    private String title;
+    private String year;
+    private String genre;
+    private String director;
+    private String writer;
+    private String actors;
+    private String plot;
+    private String language;
+    private String country;
+    private String poster;
     @Id
     private String imdbID;
-    private String Type;
-    private Double Value;
+    private String type;
+    private Double value;
 
     @ManyToMany(mappedBy = "omdbs")
     private List<Client> clients = new ArrayList<>();
 
-    public Double getValue() {
-        return Value;
+    public OMDB(){
+
     }
 
-    public void setValue(Double value) {
-        Value = value;
+    public OMDB (String title, String year, String genre, String director, String writer, String actors, String plot, String language, String country, String poster, String imdbID, String type, Double value) {
+        this.title = title;
+        this.year = year;
+        this.genre = genre;
+        this.director = director;
+        this.writer = writer;
+        this.actors = actors;
+        this.plot = plot;
+        this.language = language;
+        this.country = country;
+        this.poster = poster;
+        this.imdbID = imdbID;
+        this.type = type;
+        this.value = value;
     }
+
 
     public String getTitle() {
-        return Title;
+        return title;
     }
 
     public void setTitle(String title) {
-        Title = title;
+        this.title = title;
     }
 
     public String getYear() {
-        return Year;
+        return year;
     }
 
     public void setYear(String year) {
-        Year = year;
+        this.year = year;
     }
 
     public String getGenre() {
-        return Genre;
+        return genre;
     }
 
     public void setGenre(String genre) {
-        Genre = genre;
+        this.genre = genre;
     }
 
     public String getDirector() {
-        return Director;
+        return director;
     }
 
     public void setDirector(String director) {
-        Director = director;
+        this.director = director;
     }
 
     public String getWriter() {
-        return Writer;
+        return writer;
     }
 
     public void setWriter(String writer) {
-        Writer = writer;
+        this.writer = writer;
     }
 
     public String getActors() {
-        return Actors;
+        return actors;
     }
 
     public void setActors(String actors) {
-        Actors = actors;
+        this.actors = actors;
     }
 
     public String getPlot() {
-        return Plot;
+        return plot;
     }
 
     public void setPlot(String plot) {
-        Plot = plot;
+        this.plot = plot;
     }
 
     public String getLanguage() {
-        return Language;
+        return language;
     }
 
     public void setLanguage(String language) {
-        Language = language;
+        this.language = language;
     }
 
     public String getCountry() {
-        return Country;
+        return country;
     }
 
     public void setCountry(String country) {
-        Country = country;
+        this.country = country;
     }
 
     public String getPoster() {
-        return Poster;
+        return poster;
     }
 
     public void setPoster(String poster) {
-        Poster = poster;
+        this.poster = poster;
     }
 
     public String getImdbID() {
@@ -122,11 +137,27 @@ public class OMDB {
     }
 
     public String getType() {
-        return Type;
+        return type;
     }
 
     public void setType(String type) {
-        Type = type;
+        this.type = type;
+    }
+
+    public Double getValue() {
+        return value;
+    }
+
+    public void setValue(Double value) {
+        this.value = value;
+    }
+
+    public List<Client> getClients() {
+        return clients;
+    }
+
+    public void setClients(List<Client> clients) {
+        this.clients = clients;
     }
 
     @Override
