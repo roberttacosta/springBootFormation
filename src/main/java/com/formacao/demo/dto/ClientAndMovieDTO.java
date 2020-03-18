@@ -1,7 +1,17 @@
 package com.formacao.demo.dto;
 
+import org.hibernate.validator.constraints.br.CPF;
+
+import javax.persistence.Column;
+import javax.validation.constraints.NotEmpty;
+
 public class ClientAndMovieDTO {
+    @NotEmpty(message = "Preenchimento obrigatório")
+    @CPF
+    @Column(unique = true)
     private String cpf;
+
+    @NotEmpty(message = "Preenchimento obrigatório")
     private String title;
 
     public String getCpf() {

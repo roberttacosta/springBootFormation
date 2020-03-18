@@ -2,7 +2,7 @@ package com.formacao.demo.service;
 
 import com.formacao.demo.domain.Account;
 import com.formacao.demo.repository.AccountRepository;
-import com.formacao.demo.service.excepetion.ObjectNotFoundExcepetion;
+import com.formacao.demo.service.exceptions.ObjectNotFoundExcepetion;
 import com.formacao.demo.service.impl.AccountServiceImpl;
 import org.junit.Assert;
 import org.junit.Before;

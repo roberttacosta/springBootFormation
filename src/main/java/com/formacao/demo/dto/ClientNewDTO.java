@@ -1,9 +1,24 @@
 package com.formacao.demo.dto;
 
+import org.hibernate.validator.constraints.Length;
+import org.hibernate.validator.constraints.br.CPF;
+
+import javax.persistence.Column;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
+
 public class ClientNewDTO {
 
+    @NotEmpty(message = "Preenchimento obrigatório")
+    @Length(min = 5, max = 120, message = "O tamanho deve ser entre 5 e 120 caracteres")
     private String name;
+
+    @NotEmpty(message = "Preenchimento obrigatório")
+    @CPF
+    @Column(unique = true)
     private String cpf;
+
     private double balance;
 
     public ClientNewDTO() {

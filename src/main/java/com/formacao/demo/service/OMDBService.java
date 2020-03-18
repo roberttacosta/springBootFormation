@@ -9,7 +9,7 @@ public interface OMDBService {
 
     OMDB LocateNewMovieByClient(ClientAndMovieDTO clientAndMovieDTO);
 
-    OMDB find(String id);
+    OMDB find(String title);
 
     List<OMDB> findAll();
 }

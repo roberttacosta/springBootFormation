@@ -8,13 +8,13 @@ import com.formacao.demo.integration.response.OMDBResponse;
 import com.formacao.demo.repository.OMDBRepository;
 import com.formacao.demo.service.ClientService;
 import com.formacao.demo.service.OMDBService;
-import com.formacao.demo.service.excepetion.ObjectNotFoundExcepetion;
+import com.formacao.demo.service.exceptions.DataIntegrityException;
+import com.formacao.demo.service.exceptions.ObjectNotFoundExcepetion;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.text.DecimalFormat;
-import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.Random;
 
 @Service
@@ -32,8 +32,9 @@ public class OMDBServiceImpl implements OMDBService {
     }
 
     @Override
-    public OMDB find(String id) {
-        return omdbRepository.findById(id).orElseThrow(() -> new ObjectNotFoundExcepetion("Objeto não encontrado:" + id + ". Tipo:" + OMDB.class.getName()));
+    public OMDB find(String title) {
+        return Optional.ofNullable(omdbRepository.findByTitle(title))
+                .orElseThrow(() -> new ObjectNotFoundExcepetion("A movie with the title: "+title+ " was not found"));
     }
 
     @Override
@@ -45,7 +46,6 @@ public class OMDBServiceImpl implements OMDBService {
     public OMDB LocateNewMovieByClient(ClientAndMovieDTO clientAndMovieDTO) {
         Client client = clientService.findByCPF(clientAndMovieDTO.getCpf());
         OMDB omdb = builOmdb(omdbApi.findByName(clientAndMovieDTO.getTitle(), "a549d02f"));
-
 
         checkIfInNotSameMovie(client, omdb);
         checkIfAccountIsNotNegative(client, omdb);
@@ -65,15 +65,15 @@ public class OMDBServiceImpl implements OMDBService {
 
     private void checkIfAccountIsNotNegative(Client client, OMDB omdb) {
         if ((client.getAccount().getBalance() - omdb.getValue()) <= 0)
-            throw new ObjectNotFoundExcepetion("Current balance is less than movie value, movie value is:"+omdb.getValue() +", maximum allowable movie value is:" + client.getAccount().getBalance());
+            throw new DataIntegrityException("Current balance is less than movie value, movie value is: "+omdb.getValue() +", maximum allowable movie value is:" + client.getAccount().getBalance());
     }
 
     private void checkIfInNotSameMovie (Client client, OMDB omdb){
-        OMDB omdb1 = find(omdb.getImdbID());
+        Client client1 = clientService.findByCPF(client.getCpf());
 
-        for (Client client1 : omdb1.getClients()) {
-            if (client1 == client)
-                throw new ObjectNotFoundExcepetion("The movie already exists for client.");
+        for (OMDB omdb1 : client1.getOmdbs()) {
+            if (omdb1.getImdbID().equals(omdb.getImdbID()))
+                throw new DataIntegrityException("The film: "+ omdb.getTitle() + " has already been rented by the customer: "+client.getName());
         }
     }
 }

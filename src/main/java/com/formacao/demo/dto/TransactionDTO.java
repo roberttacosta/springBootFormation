@@ -2,6 +2,9 @@ package com.formacao.demo.dto;
 
 import com.formacao.demo.domain.enums.TypeTransaction;
 
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
+
 public class TransactionDTO {
 
     private Integer idSourceAccount;

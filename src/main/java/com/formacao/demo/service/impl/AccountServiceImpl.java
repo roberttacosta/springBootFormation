@@ -6,7 +6,7 @@ import com.formacao.demo.domain.Transaction;
 import com.formacao.demo.repository.AccountRepository;
 import com.formacao.demo.service.AccountService;
 import com.formacao.demo.service.TransactionService;
-import com.formacao.demo.service.excepetion.ObjectNotFoundExcepetion;
+import com.formacao.demo.service.exceptions.ObjectNotFoundExcepetion;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -23,7 +23,7 @@ public class AccountServiceImpl implements AccountService {
     public Account find(Integer id) {
 
         return accountRepository.findById(id)
-                .orElseThrow(() -> new ObjectNotFoundExcepetion("Objeto não encontrado:" + id + ". Tipo:" + Account.class.getName()));
+                .orElseThrow(() -> new ObjectNotFoundExcepetion("An account with the id: "+id+ " was not found"));
     }
 
     @Override

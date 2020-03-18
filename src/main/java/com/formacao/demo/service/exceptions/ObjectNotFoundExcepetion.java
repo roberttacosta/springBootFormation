@@ -1,4 +1,4 @@
-package com.formacao.demo.service.excepetion;
+package com.formacao.demo.service.exceptions;
 
 public class ObjectNotFoundExcepetion extends RuntimeException {
     private static final long serialVersionUID = 1L;

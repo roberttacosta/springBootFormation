@@ -2,13 +2,14 @@ package com.formacao.demo.service.impl;
 
 import com.formacao.demo.domain.Account;
 import com.formacao.demo.domain.Client;
+import com.formacao.demo.domain.Transaction;
 import com.formacao.demo.dto.ClientNewDTO;
 import com.formacao.demo.repository.ClientRepository;
 import com.formacao.demo.service.AccountService;
 import com.formacao.demo.service.ClientService;
 import com.formacao.demo.service.TransactionService;
-import com.formacao.demo.service.excepetion.ObjectNotFoundExcepetion;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.formacao.demo.service.exceptions.DataIntegrityException;
+import com.formacao.demo.service.exceptions.ObjectNotFoundExcepetion;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -30,16 +31,18 @@ public class ClientServiceImpl implements ClientService {
 
     @Override
     public Client find(Integer id) {
-        return clientRepository.findById(id).orElseThrow(() -> new ObjectNotFoundExcepetion("Objeto não encontrado:" + id + ". Tipo:" + Client.class.getName()));
+        return clientRepository.findById(id).orElseThrow(() -> new ObjectNotFoundExcepetion("A client with the id: "+id+ " was not found"));
     }
 
     @Override
-    public Client findByCPF(String CPF) {
-        return Optional.ofNullable(clientRepository.findByCpf(CPF)).orElseThrow(() -> new ObjectNotFoundExcepetion("Objeto não encontrado:" + CPF + ". Tipo:" + Client.class.getName()));
+    public Client findByCPF(String cpf) {
+        return Optional.ofNullable(clientRepository.findByCpf(cpf))
+                .orElseThrow(() -> new ObjectNotFoundExcepetion("A client with the cpf: "+cpf+ " was not found"));
     }
 
     @Override
     public Client createClientAndAcconut(ClientNewDTO clientNewDTO) {
+        checkIfNotExistsCpfInDataBase(clientNewDTO);
         Client client = this.buildClient(clientNewDTO);
         accountService.create(client);
         return clientRepository.save(client);
@@ -73,5 +76,10 @@ public class ClientServiceImpl implements ClientService {
     private Client buildClient(ClientNewDTO clientNewDTO) {
         return new Client(null, clientNewDTO.getName(), clientNewDTO.getCpf(),
                 new Account(null, LocalDateTime.now(), clientNewDTO.getBalance()));
+    }
+
+    private void checkIfNotExistsCpfInDataBase(ClientNewDTO clientNewDTO) {
+        if (findByCPF(clientNewDTO.getCpf())!= null)
+            throw new DataIntegrityException("This CPF already exists in DataBase, insert a new CPF!");
     }
 }

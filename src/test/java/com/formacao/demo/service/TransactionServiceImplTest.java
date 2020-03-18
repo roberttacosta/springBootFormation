@@ -5,9 +5,8 @@ import com.formacao.demo.domain.Transaction;
 import com.formacao.demo.domain.enums.TypeTransaction;
 import com.formacao.demo.dto.TransactionDTO;
 import com.formacao.demo.repository.TransactionRepository;
-import com.formacao.demo.service.excepetion.ObjectNotFoundExcepetion;
+import com.formacao.demo.service.exceptions.ObjectNotFoundExcepetion;
 import com.formacao.demo.service.impl.TransactionServiceImpl;
-import org.hamcrest.CoreMatchers;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Rule;
@@ -18,7 +17,6 @@ import org.mockito.*;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.time.LocalDateTime;
-import java.util.Optional;
 
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;

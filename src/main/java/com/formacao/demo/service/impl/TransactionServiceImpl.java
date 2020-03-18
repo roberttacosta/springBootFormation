@@ -3,12 +3,13 @@ package com.formacao.demo.service.impl;
 import com.formacao.demo.domain.Account;
 import com.formacao.demo.domain.Client;
 import com.formacao.demo.domain.Transaction;
+import com.formacao.demo.domain.enums.TypeTransaction;
 import com.formacao.demo.dto.TransactionDTO;
 import com.formacao.demo.repository.TransactionRepository;
 import com.formacao.demo.service.AccountService;
 import com.formacao.demo.service.TransactionService;
-import com.formacao.demo.service.excepetion.ObjectNotFoundExcepetion;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.formacao.demo.service.exceptions.DataIntegrityException;
+import com.formacao.demo.service.exceptions.ObjectNotFoundExcepetion;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -28,7 +29,7 @@ public class TransactionServiceImpl implements TransactionService {
     @Override
     public Transaction find(Integer id) {
         return transactionRepository.findById(id).orElseThrow(() ->
-                new ObjectNotFoundExcepetion("Objeto não encontrado:" + id + ". Tipo:" + Transaction.class.getName()));
+                new ObjectNotFoundExcepetion("A transaction with the id: "+id+ " was not found"));
     }
 
     @Override
@@ -76,7 +77,7 @@ public class TransactionServiceImpl implements TransactionService {
             case TRANSFER:
                 return transfer(transaction);
             default:
-                throw new ObjectNotFoundExcepetion("Type transaction is invalid");
+                throw new DataIntegrityException("Type transaction is invalid");
         }
     }
 
@@ -112,16 +113,16 @@ public class TransactionServiceImpl implements TransactionService {
 
     private void checkIfSourceAccountIsTheSameTargetAccount(Transaction transaction) {
         if (transaction.getSourceAccount() == transaction.getTargetAccount())
-            throw new ObjectNotFoundExcepetion("The target account cannot be the same as the source account");
+            throw new DataIntegrityException("The target account cannot be the same as the source account");
     }
 
     private void checkIfSourceAccountIsNotNegative(Transaction transaction) {
         if ((transaction.getSourceAccount().getBalance() - transaction.getTransactionAmount()) <= 0)
-            throw new ObjectNotFoundExcepetion("Current balance is less than transaction amount, maximum allowable transaction amount is:" + transaction.getSourceAccount().getBalance());
+            throw new DataIntegrityException("Current balance is less than transaction amount, maximum allowable transaction amount is: " + transaction.getSourceAccount().getBalance());
     }
 
     private void checkIfTransactionAmountGreaterThanZero(Transaction transaction) {
         if (transaction.getTransactionAmount() <= 0)
-            throw new ObjectNotFoundExcepetion("The transaction amount must be greater than zero.");
+            throw new DataIntegrityException("The transaction amount must be greater than zero.");
     }
 }
