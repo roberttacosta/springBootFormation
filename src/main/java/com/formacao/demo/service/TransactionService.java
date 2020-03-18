@@ -5,7 +5,6 @@ import com.formacao.demo.domain.Client;
 import com.formacao.demo.domain.Transaction;
 import com.formacao.demo.dto.TransactionDTO;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 public interface TransactionService {
@@ -18,5 +17,5 @@ public interface TransactionService {
 
     void delete(Client client);
 
-//    List<Transaction> findByDate (LocalDateTime startDate, LocalDateTime endDate);
+    List<Transaction> findByDate (String startDate, String endDate);
 }

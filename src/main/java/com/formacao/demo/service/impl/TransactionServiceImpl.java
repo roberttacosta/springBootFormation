@@ -3,7 +3,6 @@ package com.formacao.demo.service.impl;
 import com.formacao.demo.domain.Account;
 import com.formacao.demo.domain.Client;
 import com.formacao.demo.domain.Transaction;
-import com.formacao.demo.domain.enums.TypeTransaction;
 import com.formacao.demo.dto.TransactionDTO;
 import com.formacao.demo.repository.TransactionRepository;
 import com.formacao.demo.service.AccountService;
@@ -29,7 +28,7 @@ public class TransactionServiceImpl implements TransactionService {
     @Override
     public Transaction find(Integer id) {
         return transactionRepository.findById(id).orElseThrow(() ->
-                new ObjectNotFoundExcepetion("A transaction with the id: "+id+ " was not found"));
+                new ObjectNotFoundExcepetion("A transaction with the id: " + id + " was not found"));
     }
 
     @Override
@@ -47,13 +46,13 @@ public class TransactionServiceImpl implements TransactionService {
 
     @Override
     public List<Transaction> findAllBySourceAccount(Account account) {
-       return transactionRepository.findAllBySourceAccount(account);
+        return transactionRepository.findAllBySourceAccount(account);
     }
 
-//    @Override
-//    public List<Transaction> findByDate (LocalDateTime startDate, LocalDateTime endDate) {
-//        return transactionRepository.findByDate(startDate, endDate);
-//    }
+    @Override
+    public List<Transaction> findByDate (String startDate, String endDate) {
+        return transactionRepository.findByDate(startDate, endDate);
+    }
 
     @Override
     public void delete(Client client) {

@@ -34,11 +34,11 @@ public class OMDBServiceImpl implements OMDBService {
     @Override
     public OMDB find(String title) {
         return Optional.ofNullable(omdbRepository.findByTitle(title))
-                .orElseThrow(() -> new ObjectNotFoundExcepetion("A movie with the title: "+title+ " was not found"));
+                .orElseThrow(() -> new ObjectNotFoundExcepetion("A movie with the title: " + title + " was not found"));
     }
 
     @Override
-    public List<OMDB> findAll(){
+    public List<OMDB> findAll() {
         return omdbRepository.findAll();
     }
 
@@ -55,25 +55,25 @@ public class OMDBServiceImpl implements OMDBService {
         client.getOmdbs().add(omdb);
         omdb.getClients().add(client);
 
-       return omdbRepository.save(omdb);
+        return omdbRepository.save(omdb);
     }
 
-    private OMDB builOmdb(OMDBResponse omdbResponse){
+    private OMDB builOmdb(OMDBResponse omdbResponse) {
         Random random = new Random();
         return new OMDB(omdbResponse.getTitle(), omdbResponse.getYear(), omdbResponse.getGenre(), omdbResponse.getDirector(), omdbResponse.getWriter(), omdbResponse.getActors(), omdbResponse.getPlot(), omdbResponse.getLanguage(), omdbResponse.getCountry(), omdbResponse.getPoster(), omdbResponse.getImdbID(), omdbResponse.getType(), (random.nextDouble() * 100));
     }
 
     private void checkIfAccountIsNotNegative(Client client, OMDB omdb) {
         if ((client.getAccount().getBalance() - omdb.getValue()) <= 0)
-            throw new DataIntegrityException("Current balance is less than movie value, movie value is: "+omdb.getValue() +", maximum allowable movie value is:" + client.getAccount().getBalance());
+            throw new DataIntegrityException("Current balance is less than movie value, movie value is: " + omdb.getValue() + ", maximum allowable movie value is:" + client.getAccount().getBalance());
     }
 
-    private void checkIfInNotSameMovie (Client client, OMDB omdb){
+    private void checkIfInNotSameMovie(Client client, OMDB omdb) {
         Client client1 = clientService.findByCPF(client.getCpf());
 
         for (OMDB omdb1 : client1.getOmdbs()) {
             if (omdb1.getImdbID().equals(omdb.getImdbID()))
-                throw new DataIntegrityException("The film: "+ omdb.getTitle() + " has already been rented by the customer: "+client.getName());
+                throw new DataIntegrityException("The film: " + omdb.getTitle() + " has already been rented by the customer: " + client.getName());
         }
     }
 }

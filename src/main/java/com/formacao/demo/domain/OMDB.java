@@ -27,11 +27,11 @@ public class OMDB {
     @ManyToMany(mappedBy = "omdbs")
     private List<Client> clients = new ArrayList<>();
 
-    public OMDB(){
+    public OMDB() {
 
     }
 
-    public OMDB (String title, String year, String genre, String director, String writer, String actors, String plot, String language, String country, String poster, String imdbID, String type, Double value) {
+    public OMDB(String title, String year, String genre, String director, String writer, String actors, String plot, String language, String country, String poster, String imdbID, String type, Double value) {
         this.title = title;
         this.year = year;
         this.genre = genre;

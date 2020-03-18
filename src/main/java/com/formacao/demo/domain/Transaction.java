@@ -1,5 +1,6 @@
 package com.formacao.demo.domain;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.formacao.demo.domain.enums.TypeTransaction;
 
@@ -24,7 +25,7 @@ public class Transaction {
 
     private double transactionAmount;
 
-    @JsonIgnore
+    @JsonFormat(pattern = "dd/MM/yyyy HH:mm")
     private LocalDateTime transactionDate;
     private TypeTransaction typeTransaction;
 

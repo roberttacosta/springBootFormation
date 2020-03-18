@@ -1,10 +1,7 @@
 package com.formacao.demo.controller;
 
-import com.formacao.demo.domain.Client;
 import com.formacao.demo.domain.OMDB;
 import com.formacao.demo.dto.ClientAndMovieDTO;
-import com.formacao.demo.dto.ClientNewDTO;
-import com.formacao.demo.service.ClientService;
 import com.formacao.demo.service.OMDBService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -34,7 +31,8 @@ public class OMDBController {
     @GetMapping
     @ResponseBody
     @ResponseStatus(HttpStatus.OK)
-    public List<OMDB> findAll() { return omdbService.findAll();
+    public List<OMDB> findAll() {
+        return omdbService.findAll();
     }
 
     @PostMapping

@@ -10,12 +10,12 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class SerializationConfiguration {
     @Bean
-    public Encoder encoder(){
+    public Encoder encoder() {
         return new JacksonEncoder();
     }
 
     @Bean
-    public Decoder decoder(){
+    public Decoder decoder() {
         return new JacksonDecoder();
     }
 }

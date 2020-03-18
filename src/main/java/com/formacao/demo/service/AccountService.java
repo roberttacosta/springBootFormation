@@ -4,7 +4,6 @@ import com.formacao.demo.domain.Account;
 import com.formacao.demo.domain.Client;
 import com.formacao.demo.domain.Transaction;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 public interface AccountService {
@@ -15,10 +14,9 @@ public interface AccountService {
 
     List<Transaction> bankStatement(Integer id);
 
-//    List<Transaction> bankStatementByDate(LocalDateTime startDate, LocalDateTime endDate);
+    List<Transaction> bankStatementByDate(String startDate, String endDate);
 
     void delete(Client client);
 
     Account create(Client client);
-
 }

@@ -23,7 +23,7 @@ public class AccountServiceImpl implements AccountService {
     public Account find(Integer id) {
 
         return accountRepository.findById(id)
-                .orElseThrow(() -> new ObjectNotFoundExcepetion("An account with the id: "+id+ " was not found"));
+                .orElseThrow(() -> new ObjectNotFoundExcepetion("An account with the id: " + id + " was not found"));
     }
 
     @Override
@@ -36,10 +36,10 @@ public class AccountServiceImpl implements AccountService {
         return transactionService.findAllBySourceAccount(this.find(id));
     }
 
-//    @Override
-//    public List<Transaction> bankStatementByDate(LocalDateTime startDate, LocalDateTime endDate) {
-//        return transactionService.findByDate(startDate, endDate);
-//    }
+    @Override
+    public List<Transaction> bankStatementByDate(String startDate, String endDate) {
+        return transactionService.findByDate(startDate, endDate);
+    }
 
     @Override
     public void delete(Client client) {
@@ -47,7 +47,7 @@ public class AccountServiceImpl implements AccountService {
     }
 
     @Override
-    public Account create(Client client){
+    public Account create(Client client) {
         return accountRepository.save(client.getAccount());
     }
 

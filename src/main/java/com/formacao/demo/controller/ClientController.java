@@ -2,7 +2,6 @@ package com.formacao.demo.controller;
 
 import com.formacao.demo.domain.Client;
 import com.formacao.demo.dto.ClientNewDTO;
-import com.formacao.demo.integration.configuration.OMDBApi;
 import com.formacao.demo.service.ClientService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -13,7 +12,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping(value = "/clients")
-public class ClientController{
+public class ClientController {
     private ClientService clientService;
 
     @Autowired
