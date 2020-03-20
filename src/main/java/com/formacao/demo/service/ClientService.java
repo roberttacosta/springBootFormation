@@ -15,7 +15,7 @@ public interface ClientService {
 
     Client update(Client client);
 
-    Client deleteClientAccountTransaction(Integer id);
+    void deleteClientAccountTransaction(Integer id);
 
     List<Client> findAll();
 

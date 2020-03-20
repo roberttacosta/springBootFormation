@@ -14,7 +14,7 @@ public interface AccountService {
 
     List<Transaction> bankStatement(Integer id);
 
-    List<Transaction> bankStatementByDate(String startDate, String endDate);
+    List<Transaction> bankStatementByDate(Integer id, String startDate, String endDate);
 
     void delete(Client client);
 

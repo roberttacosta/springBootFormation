@@ -1,12 +1,15 @@
 package com.formacao.demo.service;
 
 import com.formacao.demo.domain.Account;
+import com.formacao.demo.domain.Client;
 import com.formacao.demo.domain.Transaction;
 import com.formacao.demo.domain.enums.TypeTransaction;
 import com.formacao.demo.dto.TransactionDTO;
 import com.formacao.demo.repository.TransactionRepository;
+import com.formacao.demo.service.exceptions.DataIntegrityException;
 import com.formacao.demo.service.exceptions.ObjectNotFoundExcepetion;
 import com.formacao.demo.service.impl.TransactionServiceImpl;
+import com.sun.xml.bind.v2.model.core.ID;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Rule;
@@ -16,9 +19,13 @@ import org.junit.runner.RunWith;
 import org.mockito.*;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import javax.validation.constraints.AssertTrue;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 
-import static org.mockito.ArgumentMatchers.*;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
 @RunWith(SpringRunner.class)
@@ -35,7 +42,8 @@ public class TransactionServiceImplTest {
     @Rule
     public ExpectedException thrown = ExpectedException.none();
 
-    private Transaction transaction;
+    private Transaction transaction, transaction2;
+    private Client client;
     private TransactionDTO transactionDTO;
     private Account sourceAccount, targetAccount;
     private Double transactionAmountNormal = 50.00;
@@ -47,11 +55,17 @@ public class TransactionServiceImplTest {
         sourceAccount = buildSourceAccount();
         targetAccount = buildTargetAccount();
         transaction = buildTransaction();
+        transaction2 = buildTransaction2();
         transactionDTO = buildTransactionDTO();
+        client = builClient();
     }
 
     private Transaction buildTransaction() {
         return new Transaction(123, null, null, 0.00, LocalDateTime.now(), null);
+    }
+
+    private Transaction buildTransaction2() {
+        return new Transaction(124, null, null, 0.00, LocalDateTime.now(), null);
     }
 
     private TransactionDTO buildTransactionDTO() {
@@ -64,6 +78,33 @@ public class TransactionServiceImplTest {
 
     private Account buildTargetAccount() {
         return new Account(9873, LocalDateTime.now(), 900.00);
+    }
+
+    private Client builClient(){
+        return new Client(1, "Rafael Teste", "12659459690", sourceAccount);
+    }
+
+    @Test
+    public void find_caseTransactionExistsReturnSucess(){
+        transaction.setSourceAccount(sourceAccount);
+        transaction.setTransactionAmount(200.00);
+        transaction.setTypeTransaction(TypeTransaction.WITHDRAW);
+
+        Mockito.when(transactionRepository.findById(transaction.getId())).thenReturn(Optional.of(transaction));
+
+        final Transaction response = transactionServiceImpl.find(123);
+
+        Assert.assertNotNull(response);
+        Assert.assertEquals(transaction, response);
+    }
+
+    @Test
+    public void find_caseTransactionNotExistsThrowException(){
+        Mockito.when(transactionRepository.findById(ArgumentMatchers.any())).thenReturn(Optional.empty());
+        thrown.expect(ObjectNotFoundExcepetion.class);
+        thrown.expectMessage("A transaction with the id: " + 123 + " was not found");
+
+        transactionServiceImpl.find(123);
     }
 
     @Test
@@ -92,7 +133,7 @@ public class TransactionServiceImplTest {
         when(accountService.find(transactionDTO.getIdSourceAccount())).thenReturn(sourceAccount);
         when(transactionRepository.save(any(Transaction.class))).thenReturn(transaction);
 
-        thrown.expect(ObjectNotFoundExcepetion.class);
+        thrown.expect(DataIntegrityException.class);
         thrown.expectMessage("The transaction amount must be greater than zero.");
 
         transactionServiceImpl.insert(transactionDTO);
@@ -124,7 +165,7 @@ public class TransactionServiceImplTest {
         when(accountService.find(transactionDTO.getIdSourceAccount())).thenReturn(sourceAccount);
         when(transactionRepository.save(transaction)).thenReturn(transaction);
 
-        thrown.expect(ObjectNotFoundExcepetion.class);
+        thrown.expect(DataIntegrityException.class);
         thrown.expectMessage("The transaction amount must be greater than zero.");
 
         transactionServiceImpl.insert(transactionDTO);
@@ -139,8 +180,8 @@ public class TransactionServiceImplTest {
         when(accountService.find(transactionDTO.getIdSourceAccount())).thenReturn(sourceAccount);
         when(transactionRepository.save(transaction)).thenReturn(transaction);
 
-        thrown.expect(ObjectNotFoundExcepetion.class);
-        thrown.expectMessage("Current balance is less than transaction amount, maximum allowable transaction amount is:" + sourceAccount.getBalance());
+        thrown.expect(DataIntegrityException.class);
+        thrown.expectMessage("Current balance is less than transaction amount, maximum allowable transaction amount is: " + sourceAccount.getBalance());
 
         transactionServiceImpl.insert(transactionDTO);
     }
@@ -176,7 +217,7 @@ public class TransactionServiceImplTest {
         when(accountService.find(transactionDTO.getIdTargetAccount())).thenReturn(targetAccount);
         when(transactionRepository.save(transaction)).thenReturn(transaction);
 
-        thrown.expect(ObjectNotFoundExcepetion.class);
+        thrown.expect(DataIntegrityException.class);
         thrown.expectMessage("The transaction amount must be greater than zero.");
 
         transactionServiceImpl.insert(transactionDTO);
@@ -187,14 +228,14 @@ public class TransactionServiceImplTest {
         transactionDTO.setIdSourceAccount(sourceAccount.getId());
         transactionDTO.setIdTargetAccount(targetAccount.getId());
         transactionDTO.setTransactionAmount(transactionAmountIsNotNegative);
-        transactionDTO.setTypeTransaction(TypeTransaction.WITHDRAW);
+        transactionDTO.setTypeTransaction(TypeTransaction.TRANSFER);
 
         when(accountService.find(transactionDTO.getIdSourceAccount())).thenReturn(sourceAccount);
         when(accountService.find(transactionDTO.getIdTargetAccount())).thenReturn(targetAccount);
         when(transactionRepository.save(transaction)).thenReturn(transaction);
 
-        thrown.expect(ObjectNotFoundExcepetion.class);
-        thrown.expectMessage("Current balance is less than transaction amount, maximum allowable transaction amount is:" + sourceAccount.getBalance());
+        thrown.expect(DataIntegrityException.class);
+        thrown.expectMessage("Current balance is less than transaction amount, maximum allowable transaction amount is: " + sourceAccount.getBalance());
 
         transactionServiceImpl.insert(transactionDTO);
     }
@@ -207,13 +248,84 @@ public class TransactionServiceImplTest {
         transactionDTO.setTypeTransaction(TypeTransaction.TRANSFER);
 
         when(accountService.find(transactionDTO.getIdSourceAccount())).thenReturn(sourceAccount);
-//        when(accountService.find(transactionDTO.getIdTargetAccount())).thenReturn(sourceAccount);
+        when(accountService.find(transactionDTO.getIdTargetAccount())).thenReturn(sourceAccount);
         when(transactionRepository.save(transaction)).thenReturn(transaction);
 
-//        thrown.expect(ObjectNotFoundExcepetion.class);
-//        thrown.expectMessage("The target account cannot be the same as the source account");
+        thrown.expect(DataIntegrityException.class);
+        thrown.expectMessage("The target account cannot be the same as the source account");
 
         transactionServiceImpl.insert(transactionDTO);
+    }
+
+    @Test
+    public void findAllBySourceAccount_listTransactionsSuccess(){
+        transaction.setSourceAccount(sourceAccount);
+        transaction.setTransactionAmount(200.00);
+        transaction.setTypeTransaction(TypeTransaction.WITHDRAW);
+
+        transaction2.setSourceAccount(sourceAccount);
+        transaction2.setTransactionAmount(300.00);
+        transaction2.setTypeTransaction(TypeTransaction.DEPOSIT);
+
+        ArrayList<Transaction> transactions = new ArrayList<>();
+
+        transactions.add(transaction);
+        transactions.add(transaction2);
+
+        Mockito.when(transactionRepository.findAllBySourceAccount(sourceAccount)).thenReturn(transactions);
+
+        final List<Transaction> responseTransactionList = transactionServiceImpl.findAllBySourceAccount(sourceAccount);
+
+        Assert.assertNotNull(responseTransactionList);
+        Assert.assertEquals(transactions, responseTransactionList);
+    }
+
+    @Test
+    public void delete_deleteListTransaction(){
+        transaction.setSourceAccount(sourceAccount);
+        transaction.setTransactionAmount(200.00);
+        transaction.setTypeTransaction(TypeTransaction.WITHDRAW);
+
+        transaction2.setSourceAccount(sourceAccount);
+        transaction2.setTransactionAmount(300.00);
+        transaction2.setTypeTransaction(TypeTransaction.DEPOSIT);
+
+        ArrayList<Transaction> transactions = new ArrayList<>();
+        transactions.add(transaction);
+        transactions.add(transaction2);
+
+        when(accountService.bankStatement(client.getAccount().getId())).thenReturn(transactions);
+
+        ArgumentCaptor<Integer> argumentCaptor = ArgumentCaptor.forClass(Integer.class);
+
+        transactionServiceImpl.delete(client);
+
+        verify(transactionRepository, times(2)).deleteById(argumentCaptor.capture());
+    }
+
+    @Test
+    public void findByDate_listTransactionsSuccess(){
+        transaction.setSourceAccount(sourceAccount);
+        transaction.setTransactionAmount(200.00);
+        transaction.setTypeTransaction(TypeTransaction.WITHDRAW);
+
+        transaction2.setSourceAccount(sourceAccount);
+        transaction2.setTransactionAmount(300.00);
+        transaction2.setTypeTransaction(TypeTransaction.DEPOSIT);
+
+        ArrayList<Transaction> transactions = new ArrayList<>();
+        transactions.add(transaction);
+        transactions.add(transaction2);
+
+        String startDate = "2020-03-18";
+        String endDate = "2020-03-20";
+
+        Mockito.when(transactionRepository.findByDate(sourceAccount.getId(), startDate, endDate)).thenReturn(transactions);
+
+        final List<Transaction> responseTransactionList = transactionServiceImpl.findByDate(sourceAccount, startDate, endDate);
+
+        Assert.assertNotNull(responseTransactionList);
+        Assert.assertEquals(transactions, responseTransactionList);
     }
 
 }

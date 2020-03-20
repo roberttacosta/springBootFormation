@@ -39,6 +39,6 @@ public class OMDBController {
     @ResponseBody
     @ResponseStatus(HttpStatus.CREATED)
     public OMDB insert(@Valid @RequestBody ClientAndMovieDTO clientAndMovieDTO) {
-        return omdbService.LocateNewMovieByClient(clientAndMovieDTO);
+        return omdbService.locateNewMovieByClient(clientAndMovieDTO);
     }
 }

@@ -3,6 +3,7 @@ package com.formacao.demo.domain;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.br.CPF;
+import org.springframework.hateoas.RepresentationModel;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
@@ -11,7 +12,7 @@ import java.util.List;
 import java.util.Objects;
 
 @Entity
-public class Client {
+public class Client extends RepresentationModel<Client> {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

@@ -41,7 +41,6 @@ public class TransactionServiceImpl implements TransactionService {
         this.doTransaction(transaction);
         transactionRepository.save(transaction);
         return transaction;
-
     }
 
     @Override
@@ -50,16 +49,14 @@ public class TransactionServiceImpl implements TransactionService {
     }
 
     @Override
-    public List<Transaction> findByDate (String startDate, String endDate) {
-        return transactionRepository.findByDate(startDate, endDate);
+    public List<Transaction> findByDate (Account account, String startDate, String endDate) {
+        return transactionRepository.findByDate(account.getId(), startDate, endDate);
     }
 
     @Override
     public void delete(Client client) {
-        List<Transaction> transactionList = accountService.bankStatement(client.getAccount().getId());
-        for (Transaction transaction : transactionList) {
-            transactionRepository.deleteById(transaction.getId());
-        }
+        accountService.bankStatement(client.getAccount().getId())
+                .stream().forEach(transaction -> transactionRepository.deleteById(transaction.getId()));
     }
 
 

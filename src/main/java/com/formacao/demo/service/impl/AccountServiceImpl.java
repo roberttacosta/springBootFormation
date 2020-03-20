@@ -37,8 +37,8 @@ public class AccountServiceImpl implements AccountService {
     }
 
     @Override
-    public List<Transaction> bankStatementByDate(String startDate, String endDate) {
-        return transactionService.findByDate(startDate, endDate);
+    public List<Transaction> bankStatementByDate(Integer id, String startDate, String endDate) {
+        return transactionService.findByDate(this.find(id), startDate, endDate);
     }
 
     @Override

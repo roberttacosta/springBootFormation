@@ -44,7 +44,7 @@ public class ClientServiceImpl implements ClientService {
         checkIfNotExistsCpfInDataBase(clientNewDTO);
         Client client = this.buildClient(clientNewDTO);
         accountService.create(client);
-        return clientRepository.save(client);
+        return clientRepository.saveAndFlush(client);
     }
 
     private void updateData(Client newClient, Client client) {
@@ -59,12 +59,11 @@ public class ClientServiceImpl implements ClientService {
     }
 
     @Override
-    public Client deleteClientAccountTransaction(Integer id) {
-        Client client = find(id);
+    public void deleteClientAccountTransaction(Integer id) {
+        Client client = this.find(id);
         transactionService.delete(client);
         clientRepository.deleteById(id);
         accountService.delete(client);
-        return client;
     }
 
     @Override
@@ -78,7 +77,7 @@ public class ClientServiceImpl implements ClientService {
     }
 
     private void checkIfNotExistsCpfInDataBase(ClientNewDTO clientNewDTO) {
-        if (findByCPF(clientNewDTO.getCpf()) != null)
+        if (clientRepository.findByCpf(clientNewDTO.getCpf()) != null)
             throw new DataIntegrityException("This CPF already exists in DataBase, insert a new CPF!");
     }
 }

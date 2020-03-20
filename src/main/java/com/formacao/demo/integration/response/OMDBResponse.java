@@ -8,108 +8,123 @@ import java.util.List;
 
 public class OMDBResponse implements Serializable {
     @JsonProperty(value = "Title")
-    private String Title;
+    private String title;
     @JsonProperty(value = "Year")
-    private String Year;
+    private String year;
     @JsonProperty(value = "Genre")
-    private String Genre;
+    private String genre;
     @JsonProperty(value = "Director")
-    private String Director;
+    private String director;
     @JsonProperty(value = "Writer")
-    private String Writer;
+    private String writer;
     @JsonProperty(value = "Actors")
-    private String Actors;
+    private String actors;
     @JsonProperty(value = "Plot")
-    private String Plot;
+    private String plot;
     @JsonProperty(value = "Language")
-    private String Language;
+    private String language;
     @JsonProperty(value = "Country")
-    private String Country;
+    private String country;
     @JsonProperty(value = "Poster")
-    private String Poster;
+    private String poster;
     @JsonProperty(value = "imdbID")
     private String imdbID;
     @JsonProperty(value = "Type")
-    private String Type;
+    private String type;
+
+    public OMDBResponse(String title, String year, String genre, String director, String writer, String actors, String plot, String language, String country, String poster, String imdbID, String type) {
+        this.title = title;
+        this.year = year;
+        this.genre = genre;
+        this.director = director;
+        this.writer = writer;
+        this.actors = actors;
+        this.plot = plot;
+        this.language = language;
+        this.country = country;
+        this.poster = poster;
+        this.imdbID = imdbID;
+        this.type = type;
+    }
 
     public String getTitle() {
-        return Title;
+        return title;
     }
 
     public void setTitle(String title) {
-        Title = title;
+        this.title = title;
     }
 
     public String getYear() {
-        return Year;
+        return year;
     }
 
     public void setYear(String year) {
-        Year = year;
+        this.year = year;
     }
 
     public String getGenre() {
-        return Genre;
+        return genre;
     }
 
     public void setGenre(String genre) {
-        Genre = genre;
+        this.genre = genre;
     }
 
     public String getDirector() {
-        return Director;
+        return director;
     }
 
     public void setDirector(String director) {
-        Director = director;
+        this.director = director;
     }
 
     public String getWriter() {
-        return Writer;
+        return writer;
     }
 
     public void setWriter(String writer) {
-        Writer = writer;
+        this.writer = writer;
     }
 
     public String getActors() {
-        return Actors;
+        return actors;
     }
 
     public void setActors(String actors) {
-        Actors = actors;
+        this.actors = actors;
     }
 
     public String getPlot() {
-        return Plot;
+        return plot;
     }
 
     public void setPlot(String plot) {
-        Plot = plot;
+        this.plot = plot;
     }
 
     public String getLanguage() {
-        return Language;
+        return language;
     }
 
     public void setLanguage(String language) {
-        Language = language;
+        this.language = language;
     }
 
     public String getCountry() {
-        return Country;
+        return country;
     }
 
     public void setCountry(String country) {
-        Country = country;
+        this.country = country;
     }
 
     public String getPoster() {
-        return Poster;
+        return poster;
     }
 
     public void setPoster(String poster) {
-        Poster = poster;
+        this.poster = poster;
     }
 
     public String getImdbID() {
@@ -121,10 +136,10 @@ public class OMDBResponse implements Serializable {
     }
 
     public String getType() {
-        return Type;
+        return type;
     }
 
     public void setType(String type) {
-        Type = type;
+        this.type = type;
     }
 }

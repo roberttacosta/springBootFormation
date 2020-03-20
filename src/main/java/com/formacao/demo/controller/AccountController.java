@@ -42,10 +42,10 @@ public class AccountController {
         return accountService.bankStatement(id);
     }
 
-    @GetMapping(value = "statement/{startDate}/to/{endDate}")
+    @GetMapping(value = "statement/{accountId}/{startDate}/to/{endDate}")
     @ResponseBody
     @ResponseStatus(HttpStatus.OK)
-    public List<Transaction> statementByDate(@PathVariable String startDate, @PathVariable String endDate) {
-        return accountService.bankStatementByDate(startDate, endDate);
+    public List<Transaction> statementByDate(@PathVariable Integer accountId,@PathVariable String startDate, @PathVariable String endDate) {
+        return accountService.bankStatementByDate(accountId,startDate, endDate);
     }
 }

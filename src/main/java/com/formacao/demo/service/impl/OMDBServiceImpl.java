@@ -43,7 +43,7 @@ public class OMDBServiceImpl implements OMDBService {
     }
 
     @Override
-    public OMDB LocateNewMovieByClient(ClientAndMovieDTO clientAndMovieDTO) {
+    public OMDB locateNewMovieByClient(ClientAndMovieDTO clientAndMovieDTO) {
         Client client = clientService.findByCPF(clientAndMovieDTO.getCpf());
         OMDB omdb = builOmdb(omdbApi.findByName(clientAndMovieDTO.getTitle(), "a549d02f"));
 

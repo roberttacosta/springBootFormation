@@ -14,6 +14,11 @@ public class ClientAndMovieDTO {
     @NotEmpty(message = "Preenchimento obrigatório")
     private String title;
 
+    public ClientAndMovieDTO(@NotEmpty(message = "Preenchimento obrigatório") @CPF String cpf, @NotEmpty(message = "Preenchimento obrigatório") String title) {
+        this.cpf = cpf;
+        this.title = title;
+    }
+
     public String getCpf() {
         return cpf;
     }

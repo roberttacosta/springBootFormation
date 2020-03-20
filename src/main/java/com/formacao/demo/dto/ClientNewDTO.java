@@ -23,6 +23,12 @@ public class ClientNewDTO {
 
     }
 
+    public ClientNewDTO(@NotEmpty(message = "Preenchimento obrigatório") @Length(min = 5, max = 120, message = "O tamanho deve ser entre 5 e 120 caracteres") String name, @NotEmpty(message = "Preenchimento obrigatório") @CPF String cpf, double balance) {
+        this.name = name;
+        this.cpf = cpf;
+        this.balance = balance;
+    }
+
     public String getName() {
         return name;
     }

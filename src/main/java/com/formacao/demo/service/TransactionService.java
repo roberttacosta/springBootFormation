@@ -17,5 +17,5 @@ public interface TransactionService {
 
     void delete(Client client);
 
-    List<Transaction> findByDate (String startDate, String endDate);
+    List<Transaction> findByDate (Account account, String startDate, String endDate);
 }

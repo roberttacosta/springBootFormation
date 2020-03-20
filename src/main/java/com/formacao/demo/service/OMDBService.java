@@ -7,7 +7,7 @@ import java.util.List;
 
 public interface OMDBService {
 
-    OMDB LocateNewMovieByClient(ClientAndMovieDTO clientAndMovieDTO);
+    OMDB locateNewMovieByClient(ClientAndMovieDTO clientAndMovieDTO);
 
     OMDB find(String title);
 

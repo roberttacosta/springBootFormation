@@ -2,6 +2,7 @@ package com.formacao.demo.domain;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.springframework.hateoas.RepresentationModel;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -9,7 +10,7 @@ import java.util.List;
 import java.util.Objects;
 
 @Entity
-public class Account {
+public class Account extends RepresentationModel<Account> {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
