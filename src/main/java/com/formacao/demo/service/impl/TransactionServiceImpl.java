@@ -5,10 +5,16 @@ import com.formacao.demo.domain.Client;
 import com.formacao.demo.domain.Transaction;
 import com.formacao.demo.dto.TransactionDTO;
 import com.formacao.demo.repository.TransactionRepository;
+import com.formacao.demo.security.UserSpringSecurity;
 import com.formacao.demo.service.AccountService;
+import com.formacao.demo.service.ClientService;
 import com.formacao.demo.service.TransactionService;
+import com.formacao.demo.service.UserService;
+import com.formacao.demo.service.exceptions.AuthorizationException;
 import com.formacao.demo.service.exceptions.DataIntegrityException;
 import com.formacao.demo.service.exceptions.ObjectNotFoundException;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -19,10 +25,15 @@ public class TransactionServiceImpl implements TransactionService {
 
     private TransactionRepository transactionRepository;
     private AccountService accountService;
+    private ClientService clientService;
+    private UserService userService;
 
-    public TransactionServiceImpl(TransactionRepository transactionRepository, AccountService accountService) {
+    public TransactionServiceImpl(TransactionRepository transactionRepository, AccountService accountService, @Lazy ClientService clientService,
+                                  UserService userService) {
         this.transactionRepository = transactionRepository;
         this.accountService = accountService;
+        this.clientService = clientService;
+        this.userService = userService;
     }
 
     @Override
@@ -33,7 +44,8 @@ public class TransactionServiceImpl implements TransactionService {
 
     @Override
     public Transaction insert(TransactionDTO transactionDTO) {
-        Account sourceAccount = accountService.find(transactionDTO.getIdSourceAccount());
+
+        Account sourceAccount = this.clientLoged().getAccount();
         Account targetAccount = transactionDTO.getIdTargetAccount() == null ? null : accountService.find(transactionDTO.getIdTargetAccount());
 
         Transaction transaction = this.buildTransaction(transactionDTO, sourceAccount, targetAccount);
@@ -49,7 +61,7 @@ public class TransactionServiceImpl implements TransactionService {
     }
 
     @Override
-    public List<Transaction> findByDate (Account account, String startDate, String endDate) {
+    public List<Transaction> findByDate(Account account, String startDate, String endDate) {
         return transactionRepository.findByDate(account.getId(), startDate, endDate);
     }
 
@@ -119,5 +131,13 @@ public class TransactionServiceImpl implements TransactionService {
     private void checkIfTransactionAmountGreaterThanZero(Transaction transaction) {
         if (transaction.getTransactionAmount() <= 0)
             throw new DataIntegrityException("The transaction amount must be greater than zero.");
+    }
+
+    private Client clientLoged(){
+        UserSpringSecurity userSpringSecurity = userService.authenticated();
+        if (userSpringSecurity == null) {
+            throw new AuthorizationException("Acesso negado!");
+        }
+        return clientService.findByCPF(userSpringSecurity.getUsername());
     }
 }

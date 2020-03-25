@@ -10,11 +10,13 @@ public interface AccountService {
 
     Account find(Integer id);
 
+    Account findController();
+
     List<Account> findAll();
 
     List<Transaction> bankStatement();
 
-    List<Transaction> bankStatementByDate(Integer id, String startDate, String endDate);
+    List<Transaction> bankStatementByDate(String startDate, String endDate);
 
     void delete(Client client);
 

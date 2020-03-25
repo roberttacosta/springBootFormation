@@ -5,8 +5,8 @@ import javax.validation.constraints.NotEmpty;
 
 public class EmailDTO {
 
-    @NotEmpty(message="Preenchimento obrigatório")
-    @Email(message="Email inválido")
+    @NotEmpty(message = "Preenchimento obrigatório")
+    @Email(message = "Email inválido")
     private String email;
 
     public EmailDTO() {

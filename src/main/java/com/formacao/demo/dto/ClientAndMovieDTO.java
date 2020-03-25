@@ -6,25 +6,12 @@ import javax.persistence.Column;
 import javax.validation.constraints.NotEmpty;
 
 public class ClientAndMovieDTO {
-    @NotEmpty(message = "Preenchimento obrigatório")
-    @CPF
-    @Column(unique = true)
-    private String cpf;
 
     @NotEmpty(message = "Preenchimento obrigatório")
     private String title;
 
-    public ClientAndMovieDTO(@NotEmpty(message = "Preenchimento obrigatório") @CPF String cpf, @NotEmpty(message = "Preenchimento obrigatório") String title) {
-        this.cpf = cpf;
+    public ClientAndMovieDTO(@NotEmpty(message = "Preenchimento obrigatório") String title) {
         this.title = title;
-    }
-
-    public String getCpf() {
-        return cpf;
-    }
-
-    public void setCpf(String cpf) {
-        this.cpf = cpf;
     }
 
     public String getTitle() {

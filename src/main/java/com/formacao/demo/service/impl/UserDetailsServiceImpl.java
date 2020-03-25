@@ -12,7 +12,7 @@ import org.springframework.stereotype.Service;
 public class UserDetailsServiceImpl implements UserDetailsService {
     private ClientRepository clientRepository;
 
-    public UserDetailsServiceImpl(ClientRepository clientRepository){
+    public UserDetailsServiceImpl(ClientRepository clientRepository) {
         this.clientRepository = clientRepository;
     }
 
@@ -20,7 +20,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String cpf) throws UsernameNotFoundException {
         Client client = clientRepository.findByCpf(cpf);
-        if(client == null){
+        if (client == null) {
             throw new UsernameNotFoundException(cpf);
         }
         return new UserSpringSecurity(client.getId(), client.getCpf(), client.getPassword(), client.getProfiles());

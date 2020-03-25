@@ -65,7 +65,7 @@ public class UserSpringSecurity implements UserDetails {
         return true;
     }
 
-    public boolean hasRole(Profile profile){
+    public boolean hasRole(Profile profile) {
         return getAuthorities().contains(new SimpleGrantedAuthority(profile.getDescricao()));
     }
 }

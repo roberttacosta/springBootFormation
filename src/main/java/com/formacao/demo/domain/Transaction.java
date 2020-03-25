@@ -1,7 +1,6 @@
 package com.formacao.demo.domain;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.formacao.demo.domain.enums.TypeTransaction;
 
 import javax.persistence.*;

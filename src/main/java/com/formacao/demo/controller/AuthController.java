@@ -23,7 +23,7 @@ public class AuthController {
     private UserService userService;
     private AuthService authService;
 
-    public AuthController(JWTUtil jwtUtil, UserService userService, AuthService authService){
+    public AuthController(JWTUtil jwtUtil, UserService userService, AuthService authService) {
         this.jwtUtil = jwtUtil;
         this.userService = userService;
         this.authService = authService;

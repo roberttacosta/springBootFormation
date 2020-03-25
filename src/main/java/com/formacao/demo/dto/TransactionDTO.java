@@ -4,13 +4,11 @@ import com.formacao.demo.domain.enums.TypeTransaction;
 
 public class TransactionDTO {
 
-    private Integer idSourceAccount;
     private Integer idTargetAccount;
     private double transactionAmount;
     private TypeTransaction typeTransaction;
 
     public TransactionDTO(Integer idSourceAccount, Integer idTargetAccount, double transactionAmount, TypeTransaction typeTransaction) {
-        this.idSourceAccount = idSourceAccount;
         this.idTargetAccount = idTargetAccount;
         this.transactionAmount = transactionAmount;
         this.typeTransaction = typeTransaction;
@@ -18,14 +16,6 @@ public class TransactionDTO {
 
     public TransactionDTO() {
 
-    }
-
-    public Integer getIdSourceAccount() {
-        return idSourceAccount;
-    }
-
-    public void setIdSourceAccount(Integer idSourceAccount) {
-        this.idSourceAccount = idSourceAccount;
     }
 
     public Integer getIdTargetAccount() {

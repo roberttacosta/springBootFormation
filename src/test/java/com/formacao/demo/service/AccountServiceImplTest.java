@@ -134,7 +134,7 @@ public class AccountServiceImplTest {
         Mockito.when(transactionService.findByDate(account, startDate, endDate)).thenReturn(transactions);
         Mockito.when(accountRepository.findById(account.getId())).thenReturn(Optional.of(account));
 
-        final List<Transaction> response = accountServiceImpl.bankStatementByDate(account.getId(),startDate, endDate);
+        final List<Transaction> response = accountServiceImpl.bankStatementByDate(startDate, endDate);
 
         Assert.assertNotNull(response);
         Assert.assertEquals(transactions, response);

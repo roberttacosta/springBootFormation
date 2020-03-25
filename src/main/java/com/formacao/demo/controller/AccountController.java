@@ -22,15 +22,15 @@ public class AccountController {
         this.accountService = accountService;
     }
 
-    @GetMapping(value = "/{id}")
+    @GetMapping
     @ResponseBody
     @ResponseStatus(HttpStatus.OK)
-    public Account find(@PathVariable Integer id) {
-        return accountService.find(id);
+    public Account find() {
+        return accountService.findController();
     }
 
     @PreAuthorize("hasAnyRole('ADMIN')")
-    @GetMapping
+    @GetMapping (value = "all")
     @ResponseBody
     @ResponseStatus(HttpStatus.OK)
     public List<Account> findAll() {
@@ -44,10 +44,10 @@ public class AccountController {
         return accountService.bankStatement();
     }
 
-    @GetMapping(value = "statement/{accountId}/{startDate}/to/{endDate}")
+    @GetMapping(value = "statement/{startDate}/to/{endDate}")
     @ResponseBody
     @ResponseStatus(HttpStatus.OK)
-    public List<Transaction> statementByDate(@PathVariable Integer accountId,@PathVariable String startDate, @PathVariable String endDate) {
-        return accountService.bankStatementByDate(accountId,startDate, endDate);
+    public List<Transaction> statementByDate(@PathVariable String startDate, @PathVariable String endDate) {
+        return accountService.bankStatementByDate(startDate, endDate);
     }
 }

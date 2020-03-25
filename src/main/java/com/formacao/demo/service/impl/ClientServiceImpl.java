@@ -13,6 +13,7 @@ import com.formacao.demo.service.UserService;
 import com.formacao.demo.service.exceptions.AuthorizationException;
 import com.formacao.demo.service.exceptions.DataIntegrityException;
 import com.formacao.demo.service.exceptions.ObjectNotFoundException;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -45,7 +46,7 @@ public class ClientServiceImpl implements ClientService {
     @Override
     public Client findByCPF(String cpf) {
         UserSpringSecurity userSpringSecurity = userService.authenticated();
-        if(userSpringSecurity == null || !userSpringSecurity.hasRole(Profile.ROLE_ADMIN) && !cpf.equals(userSpringSecurity.getUsername())){
+        if (userSpringSecurity == null || !userSpringSecurity.hasRole(Profile.ROLE_ADMIN) && !cpf.equals(userSpringSecurity.getUsername())) {
             throw new AuthorizationException("Acesso negado!");
         }
         return Optional.ofNullable(clientRepository.findByCpf(cpf))
@@ -93,6 +94,14 @@ public class ClientServiceImpl implements ClientService {
     private Client buildClient(ClientNewDTO clientNewDTO) {
         return new Client(null, clientNewDTO.getName(), clientNewDTO.getCpf(), clientNewDTO.getEmail(), bCryptPasswordEncoder.encode(clientNewDTO.getPassword()),
                 new Account(null, LocalDateTime.now(), clientNewDTO.getBalance()));
+    }
+
+    private Client clientLoged(){
+        UserSpringSecurity userSpringSecurity = userService.authenticated();
+        if (userSpringSecurity == null) {
+            throw new AuthorizationException("Acesso negado!");
+        }
+        return this.findByCPF(userSpringSecurity.getUsername());
     }
 
     private void checkIfNotExistsCpfInDataBase(ClientNewDTO clientNewDTO) {

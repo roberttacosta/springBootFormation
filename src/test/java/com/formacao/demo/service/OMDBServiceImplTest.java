@@ -59,7 +59,7 @@ public class OMDBServiceImplTest {
     }
 
     private ClientAndMovieDTO buildClientAndMovieDTO(){
-        return new ClientAndMovieDTO("12659459690", "Batman");
+        return new ClientAndMovieDTO( "Batman");
     }
 
     private OMDB buildOmdb(){

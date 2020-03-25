@@ -8,8 +8,6 @@ import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
-import java.time.LocalDateTime;
-
 @EnableFeignClients(basePackages = {"com.formacao.demo.integration"})
 @SpringBootApplication
 @EnableJpaRepositories(basePackages = "com.formacao.demo.repository")

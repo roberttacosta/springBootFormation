@@ -41,12 +41,12 @@ public class ClientController {
         List<Client> clientList = clientService.findAll();
         ArrayList<Client> clientArrayList = new ArrayList<>();
 //
-        for (Client client : clientList){
+        for (Client client : clientList) {
             String cpf = client.getCpf();
             Integer id = client.getId();
 
             client.add(controllerLinkBuilder.linkTo(controllerLinkBuilder.methodOn(this.getClass()).findByCPF(cpf)).withRel("Cliente por id:"));
-            client.add(controllerLinkBuilder.linkTo(controllerLinkBuilder.methodOn(AccountController.class).find(client.getAccount().getId())).withRel("Account client:"));
+//            client.add(controllerLinkBuilder.linkTo(controllerLinkBuilder.methodOn(AccountController.class).find(client.getAccount().getId())).withRel("Account client:"));
             clientArrayList.add(client);
         }
 
@@ -60,7 +60,7 @@ public class ClientController {
         Client client = clientService.findByCPF(CPF);
 
         client.add(controllerLinkBuilder.linkTo(controllerLinkBuilder.methodOn(this.getClass()).findAll()).withRel("All clients:"));
-        client.add(controllerLinkBuilder.linkTo(controllerLinkBuilder.methodOn(AccountController.class).find(client.getAccount().getId())).withRel("Client account:"));
+//        client.add(controllerLinkBuilder.linkTo(controllerLinkBuilder.methodOn(AccountController.class).find(client.getAccount().getId())).withRel("Client account:"));
         client.add(controllerLinkBuilder.linkTo(controllerLinkBuilder.methodOn(this.getClass()).update(null, client.getId())).withRel("Update"));
 //        client.add(controllerLinkBuilder.linkTo(controllerLinkBuilder.methodOn(AccountController.class).statement(client.getAccount().getId())).withRel("Statement"));
 
@@ -68,6 +68,7 @@ public class ClientController {
     }
 
 
+    @PreAuthorize("hasAnyRole('ADMIN')")
     @PostMapping
     @ResponseBody
     @ResponseStatus(HttpStatus.CREATED)
@@ -78,6 +79,7 @@ public class ClientController {
         return client;
     }
 
+    @PreAuthorize("hasAnyRole('ADMIN')")
     @PutMapping(value = "/{id}")
     @ResponseBody
     @ResponseStatus(HttpStatus.OK)

@@ -29,9 +29,14 @@ public class AccountServiceImpl implements AccountService {
 
     @Override
     public Account find(Integer id) {
-
         return accountRepository.findById(id)
                 .orElseThrow(() -> new ObjectNotFoundException("An account with the id: " + id + " was not found"));
+    }
+
+    @Override
+    public Account findController() {
+        return accountRepository.findById(this.clientLoged().getAccount().getId())
+                .orElseThrow(() -> new ObjectNotFoundException("An account with the id: " + this.clientLoged().getAccount().getId() + " was not found"));
     }
 
     @Override
@@ -41,17 +46,12 @@ public class AccountServiceImpl implements AccountService {
 
     @Override
     public List<Transaction> bankStatement() {
-        UserSpringSecurity userSpringSecurity = userService.authenticated();
-        if(userSpringSecurity == null){
-            throw new AuthorizationException("Acesso negado!");
-        }
-        Client client = clientService.findByCPF(userSpringSecurity.getUsername());
-        return transactionService.findAllBySourceAccount(this.find(client.getAccount().getId()));
+        return transactionService.findAllBySourceAccount(this.find(this.clientLoged().getAccount().getId()));
     }
 
     @Override
-    public List<Transaction> bankStatementByDate(Integer id, String startDate, String endDate) {
-        return transactionService.findByDate(this.find(id), startDate, endDate);
+    public List<Transaction> bankStatementByDate(String startDate, String endDate) {
+        return transactionService.findByDate(this.find(this.clientLoged().getAccount().getId()), startDate, endDate);
     }
 
     @Override
@@ -62,6 +62,14 @@ public class AccountServiceImpl implements AccountService {
     @Override
     public Account create(Client client) {
         return accountRepository.save(client.getAccount());
+    }
+
+    private Client clientLoged(){
+        UserSpringSecurity userSpringSecurity = userService.authenticated();
+        if (userSpringSecurity == null) {
+            throw new AuthorizationException("Acesso negado!");
+        }
+        return clientService.findByCPF(userSpringSecurity.getUsername());
     }
 
 }

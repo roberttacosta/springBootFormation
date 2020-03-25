@@ -11,7 +11,7 @@ public class EmailServiceImpl extends EmailServiceAbstract {
 
     private MailSender mailSender;
 
-    public EmailServiceImpl(MailSender mailSender){
+    public EmailServiceImpl(MailSender mailSender) {
         this.mailSender = mailSender;
     }
 

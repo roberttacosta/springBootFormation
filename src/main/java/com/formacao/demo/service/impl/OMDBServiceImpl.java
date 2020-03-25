@@ -6,8 +6,11 @@ import com.formacao.demo.dto.ClientAndMovieDTO;
 import com.formacao.demo.integration.configuration.OMDBApi;
 import com.formacao.demo.integration.response.OMDBResponse;
 import com.formacao.demo.repository.OMDBRepository;
+import com.formacao.demo.security.UserSpringSecurity;
 import com.formacao.demo.service.ClientService;
 import com.formacao.demo.service.OMDBService;
+import com.formacao.demo.service.UserService;
+import com.formacao.demo.service.exceptions.AuthorizationException;
 import com.formacao.demo.service.exceptions.DataIntegrityException;
 import com.formacao.demo.service.exceptions.ObjectNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,12 +26,14 @@ public class OMDBServiceImpl implements OMDBService {
     private OMDBRepository omdbRepository;
     private ClientService clientService;
     private OMDBApi omdbApi;
+    private UserService userService;
 
     @Autowired
-    public OMDBServiceImpl(OMDBRepository omdbRepository, ClientService clientService, OMDBApi omdbApi) {
+    public OMDBServiceImpl(OMDBRepository omdbRepository, ClientService clientService, OMDBApi omdbApi, UserService userService) {
         this.omdbRepository = omdbRepository;
         this.clientService = clientService;
         this.omdbApi = omdbApi;
+        this.userService = userService;
     }
 
     @Override
@@ -44,7 +49,7 @@ public class OMDBServiceImpl implements OMDBService {
 
     @Override
     public OMDB locateNewMovieByClient(ClientAndMovieDTO clientAndMovieDTO) {
-        Client client = clientService.findByCPF(clientAndMovieDTO.getCpf());
+        Client client = this.clientLoged();
         OMDB omdb = builOmdb(omdbApi.findByName(clientAndMovieDTO.getTitle(), "a549d02f"));
 
         checkIfInNotSameMovie(client, omdb);
@@ -73,5 +78,13 @@ public class OMDBServiceImpl implements OMDBService {
             if (omdbActual.getImdbID().equals(omdb.getImdbID()))
                 throw new DataIntegrityException("The film: " + omdb.getTitle() + " has already been rented by the customer: " + client.getName());
         }
+    }
+
+    private Client clientLoged(){
+        UserSpringSecurity userSpringSecurity = userService.authenticated();
+        if (userSpringSecurity == null) {
+            throw new AuthorizationException("Acesso negado!");
+        }
+        return clientService.findByCPF(userSpringSecurity.getUsername());
     }
 }

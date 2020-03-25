@@ -5,7 +5,7 @@ public class CredentialsDTO {
     private String cpf;
     private String password;
 
-    public CredentialsDTO(){
+    public CredentialsDTO() {
 
     }
 

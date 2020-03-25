@@ -4,7 +4,6 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.formacao.demo.domain.enums.Profile;
 import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.br.CPF;
-import org.omg.PortableInterceptor.INACTIVE;
 import org.springframework.hateoas.RepresentationModel;
 
 import javax.persistence.*;
