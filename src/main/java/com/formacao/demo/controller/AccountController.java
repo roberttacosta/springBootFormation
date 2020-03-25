@@ -5,6 +5,7 @@ import com.formacao.demo.domain.Transaction;
 import com.formacao.demo.service.AccountService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
@@ -28,6 +29,7 @@ public class AccountController {
         return accountService.find(id);
     }
 
+    @PreAuthorize("hasAnyRole('ADMIN')")
     @GetMapping
     @ResponseBody
     @ResponseStatus(HttpStatus.OK)
@@ -35,11 +37,11 @@ public class AccountController {
         return accountService.findAll();
     }
 
-    @GetMapping(value = "statement/{id}")
+    @GetMapping(value = "statement")
     @ResponseBody
     @ResponseStatus(HttpStatus.OK)
-    public List<Transaction> statement(@PathVariable Integer id) {
-        return accountService.bankStatement(id);
+    public List<Transaction> statement() {
+        return accountService.bankStatement();
     }
 
     @GetMapping(value = "statement/{accountId}/{startDate}/to/{endDate}")

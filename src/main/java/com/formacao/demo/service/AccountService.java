@@ -12,7 +12,7 @@ public interface AccountService {
 
     List<Account> findAll();
 
-    List<Transaction> bankStatement(Integer id);
+    List<Transaction> bankStatement();
 
     List<Transaction> bankStatementByDate(Integer id, String startDate, String endDate);
 

@@ -9,7 +9,7 @@ import com.formacao.demo.repository.OMDBRepository;
 import com.formacao.demo.service.ClientService;
 import com.formacao.demo.service.OMDBService;
 import com.formacao.demo.service.exceptions.DataIntegrityException;
-import com.formacao.demo.service.exceptions.ObjectNotFoundExcepetion;
+import com.formacao.demo.service.exceptions.ObjectNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -34,7 +34,7 @@ public class OMDBServiceImpl implements OMDBService {
     @Override
     public OMDB find(String title) {
         return Optional.ofNullable(omdbRepository.findByTitle(title))
-                .orElseThrow(() -> new ObjectNotFoundExcepetion("A movie with the title: " + title + " was not found"));
+                .orElseThrow(() -> new ObjectNotFoundException("A movie with the title: " + title + " was not found"));
     }
 
     @Override
@@ -69,10 +69,8 @@ public class OMDBServiceImpl implements OMDBService {
     }
 
     private void checkIfInNotSameMovie(Client client, OMDB omdb) {
-        Client client1 = clientService.findByCPF(client.getCpf());
-
-        for (OMDB omdb1 : client1.getOmdbs()) {
-            if (omdb1.getImdbID().equals(omdb.getImdbID()))
+        for (OMDB omdbActual : client.getOmdbs()) {
+            if (omdbActual.getImdbID().equals(omdb.getImdbID()))
                 throw new DataIntegrityException("The film: " + omdb.getTitle() + " has already been rented by the customer: " + client.getName());
         }
     }

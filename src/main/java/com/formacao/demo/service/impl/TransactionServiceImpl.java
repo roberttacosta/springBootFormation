@@ -8,7 +8,7 @@ import com.formacao.demo.repository.TransactionRepository;
 import com.formacao.demo.service.AccountService;
 import com.formacao.demo.service.TransactionService;
 import com.formacao.demo.service.exceptions.DataIntegrityException;
-import com.formacao.demo.service.exceptions.ObjectNotFoundExcepetion;
+import com.formacao.demo.service.exceptions.ObjectNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -28,7 +28,7 @@ public class TransactionServiceImpl implements TransactionService {
     @Override
     public Transaction find(Integer id) {
         return transactionRepository.findById(id).orElseThrow(() ->
-                new ObjectNotFoundExcepetion("A transaction with the id: " + id + " was not found"));
+                new ObjectNotFoundException("A transaction with the id: " + id + " was not found"));
     }
 
     @Override
@@ -55,7 +55,7 @@ public class TransactionServiceImpl implements TransactionService {
 
     @Override
     public void delete(Client client) {
-        accountService.bankStatement(client.getAccount().getId())
+        accountService.bankStatement()
                 .stream().forEach(transaction -> transactionRepository.deleteById(transaction.getId()));
     }
 
@@ -72,9 +72,8 @@ public class TransactionServiceImpl implements TransactionService {
                 return deposit(transaction);
             case TRANSFER:
                 return transfer(transaction);
-            default:
-                throw new DataIntegrityException("Type transaction is invalid");
         }
+        return null;
     }
 
     private Account withdraw(Transaction transaction) {

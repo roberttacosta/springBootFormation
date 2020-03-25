@@ -8,7 +8,7 @@ import com.formacao.demo.integration.configuration.OMDBApi;
 import com.formacao.demo.integration.response.OMDBResponse;
 import com.formacao.demo.repository.OMDBRepository;
 import com.formacao.demo.service.exceptions.DataIntegrityException;
-import com.formacao.demo.service.exceptions.ObjectNotFoundExcepetion;
+import com.formacao.demo.service.exceptions.ObjectNotFoundException;
 import com.formacao.demo.service.impl.OMDBServiceImpl;
 import org.junit.Assert;
 import org.junit.Before;
@@ -22,7 +22,6 @@ import org.springframework.test.context.junit4.SpringRunner;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -76,7 +75,7 @@ public class OMDBServiceImplTest {
     }
 
     private Client buildClient(){
-        return new Client(1, "Rafael Teste", "12659459690", account);
+        return new Client(1, "Rafael Teste", "12659459690", "rafael@gmail.com", "123", account);
     }
 
     private Account buildAccount() {
@@ -98,7 +97,7 @@ public class OMDBServiceImplTest {
     public void find_caseOMDBNotExistsThrowException(){
 
         Mockito.when(omdbRepository.findByTitle(ArgumentMatchers.any())).thenReturn(null);
-        thrown.expect(ObjectNotFoundExcepetion.class);
+        thrown.expect(ObjectNotFoundException.class);
         thrown.expectMessage("A movie with the title: " + omdb.getTitle() + " was not found");
 
         omdbServiceImpl.find(omdb.getTitle());

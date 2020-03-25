@@ -8,7 +8,7 @@ import com.formacao.demo.dto.ClientNewDTO;
 import com.formacao.demo.dto.TransactionDTO;
 import com.formacao.demo.repository.ClientRepository;
 import com.formacao.demo.service.exceptions.DataIntegrityException;
-import com.formacao.demo.service.exceptions.ObjectNotFoundExcepetion;
+import com.formacao.demo.service.exceptions.ObjectNotFoundException;
 import com.formacao.demo.service.impl.ClientServiceImpl;
 import org.junit.Assert;
 import org.junit.Before;
@@ -71,15 +71,15 @@ public class ClienteServiceImplTest {
     }
 
     private Client buildClient(){
-        return new Client(1, "Rafael Teste", "12659459690", account);
+        return new Client(1, "Rafael Teste", "12659459690", "rafael@gmail.com","123", account);
     }
 
     private Client buildClientNew(){
-        return new Client(1, "Rafael Teste", "67611680668", account);
+        return new Client(1, "Rafael Teste", "67611680668", "rafael@gmail.com", "123", account);
     }
 
     private ClientNewDTO buildClientNewDTO() {
-        return new ClientNewDTO("Rafael Dto", "67611680668", 150.00);
+        return new ClientNewDTO("Rafael Dto", "67611680668", "rafael@gmail.com", "123", 150.00);
     }
 
     @Test
@@ -97,7 +97,7 @@ public class ClienteServiceImplTest {
     public void find_caseAccountNotExistsThrowException(){
 
         Mockito.when(clientRepository.findById(ArgumentMatchers.any())).thenReturn(Optional.empty());
-        thrown.expect(ObjectNotFoundExcepetion.class);
+        thrown.expect(ObjectNotFoundException.class);
         thrown.expectMessage("A client with the id: " + 1 + " was not found");
 
         clientServiceImpl.find(1);
@@ -118,7 +118,7 @@ public class ClienteServiceImplTest {
     public void findByCpf_caseAccountNotExistsThrowException(){
 
         Mockito.when(clientRepository.findByCpf(ArgumentMatchers.any())).thenReturn(null);
-        thrown.expect(ObjectNotFoundExcepetion.class);
+        thrown.expect(ObjectNotFoundException.class);
         thrown.expectMessage("A client with the cpf: " + "12659459695" + " was not found");
 
         clientServiceImpl.findByCPF("12659459695");

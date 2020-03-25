@@ -5,7 +5,7 @@ import com.formacao.demo.domain.Client;
 import com.formacao.demo.domain.Transaction;
 import com.formacao.demo.domain.enums.TypeTransaction;
 import com.formacao.demo.repository.AccountRepository;
-import com.formacao.demo.service.exceptions.ObjectNotFoundExcepetion;
+import com.formacao.demo.service.exceptions.ObjectNotFoundException;
 import com.formacao.demo.service.impl.AccountServiceImpl;
 import org.junit.Assert;
 import org.junit.Before;
@@ -59,7 +59,7 @@ public class AccountServiceImplTest {
     }
 
     private Client buildClient(){
-        return new Client(1, "Rafael Teste", "12659459690", account);
+        return new Client(1, "Rafael Teste", "12659459690", "123", "rafael@gmail.com", account);
     }
 
     private Transaction buildTransaction(){
@@ -85,7 +85,7 @@ public class AccountServiceImplTest {
     public void find_caseAccountNotExistsThrowException(){
 
         Mockito.when(accountRepository.findById(ArgumentMatchers.any())).thenReturn(Optional.empty());
-        thrown.expect(ObjectNotFoundExcepetion.class);
+        thrown.expect(ObjectNotFoundException.class);
         thrown.expectMessage("An account with the id: " + 783 + " was not found");
 
         accountServiceImpl.find(783);
@@ -116,7 +116,7 @@ public class AccountServiceImplTest {
         Mockito.when(transactionService.findAllBySourceAccount(account)).thenReturn(transactions);
         Mockito.when(accountRepository.findById(account.getId())).thenReturn(Optional.of(account));
 
-        final List<Transaction> response = accountServiceImpl.bankStatement(account.getId());
+        final List<Transaction> response = accountServiceImpl.bankStatement();
 
         Assert.assertNotNull(response);
         Assert.assertEquals(transactions, response);

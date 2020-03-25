@@ -7,9 +7,8 @@ import com.formacao.demo.domain.enums.TypeTransaction;
 import com.formacao.demo.dto.TransactionDTO;
 import com.formacao.demo.repository.TransactionRepository;
 import com.formacao.demo.service.exceptions.DataIntegrityException;
-import com.formacao.demo.service.exceptions.ObjectNotFoundExcepetion;
+import com.formacao.demo.service.exceptions.ObjectNotFoundException;
 import com.formacao.demo.service.impl.TransactionServiceImpl;
-import com.sun.xml.bind.v2.model.core.ID;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Rule;
@@ -19,7 +18,6 @@ import org.junit.runner.RunWith;
 import org.mockito.*;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import javax.validation.constraints.AssertTrue;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -81,7 +79,7 @@ public class TransactionServiceImplTest {
     }
 
     private Client builClient(){
-        return new Client(1, "Rafael Teste", "12659459690", sourceAccount);
+        return new Client(1, "Rafael Teste", "12659459690", "rafael@gmail.com", "123" ,sourceAccount);
     }
 
     @Test
@@ -101,7 +99,7 @@ public class TransactionServiceImplTest {
     @Test
     public void find_caseTransactionNotExistsThrowException(){
         Mockito.when(transactionRepository.findById(ArgumentMatchers.any())).thenReturn(Optional.empty());
-        thrown.expect(ObjectNotFoundExcepetion.class);
+        thrown.expect(ObjectNotFoundException.class);
         thrown.expectMessage("A transaction with the id: " + 123 + " was not found");
 
         transactionServiceImpl.find(123);
@@ -294,7 +292,7 @@ public class TransactionServiceImplTest {
         transactions.add(transaction);
         transactions.add(transaction2);
 
-        when(accountService.bankStatement(client.getAccount().getId())).thenReturn(transactions);
+        when(accountService.bankStatement()).thenReturn(transactions);
 
         ArgumentCaptor<Integer> argumentCaptor = ArgumentCaptor.forClass(Integer.class);
 

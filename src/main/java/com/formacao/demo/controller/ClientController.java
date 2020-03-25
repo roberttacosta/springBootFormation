@@ -6,6 +6,7 @@ import com.formacao.demo.service.ClientService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.server.mvc.ControllerLinkBuilder;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -32,6 +33,7 @@ public class ClientController {
         return clientService.find(id);
     }
 
+    @PreAuthorize("hasAnyRole('ADMIN')")
     @GetMapping
     @ResponseBody
     @ResponseStatus(HttpStatus.OK)
@@ -60,10 +62,11 @@ public class ClientController {
         client.add(controllerLinkBuilder.linkTo(controllerLinkBuilder.methodOn(this.getClass()).findAll()).withRel("All clients:"));
         client.add(controllerLinkBuilder.linkTo(controllerLinkBuilder.methodOn(AccountController.class).find(client.getAccount().getId())).withRel("Client account:"));
         client.add(controllerLinkBuilder.linkTo(controllerLinkBuilder.methodOn(this.getClass()).update(null, client.getId())).withRel("Update"));
-        client.add(controllerLinkBuilder.linkTo(controllerLinkBuilder.methodOn(AccountController.class).statement(client.getAccount().getId())).withRel("Statement"));
+//        client.add(controllerLinkBuilder.linkTo(controllerLinkBuilder.methodOn(AccountController.class).statement(client.getAccount().getId())).withRel("Statement"));
 
         return client;
     }
+
 
     @PostMapping
     @ResponseBody
@@ -82,6 +85,7 @@ public class ClientController {
         return clientService.update(client);
     }
 
+    @PreAuthorize("hasAnyRole('ADMIN')")
     @DeleteMapping(value = "/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void delete(@PathVariable Integer id) {

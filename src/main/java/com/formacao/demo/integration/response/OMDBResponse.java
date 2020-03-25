@@ -8,138 +8,143 @@ import java.util.List;
 
 public class OMDBResponse implements Serializable {
     @JsonProperty(value = "Title")
-    private String title;
+    private String Title;
     @JsonProperty(value = "Year")
-    private String year;
+    private String Year;
     @JsonProperty(value = "Genre")
-    private String genre;
+    private String Genre;
     @JsonProperty(value = "Director")
-    private String director;
+    private String Director;
     @JsonProperty(value = "Writer")
-    private String writer;
+    private String Writer;
     @JsonProperty(value = "Actors")
-    private String actors;
+    private String Actors;
     @JsonProperty(value = "Plot")
-    private String plot;
+    private String Plot;
     @JsonProperty(value = "Language")
-    private String language;
+    private String Language;
     @JsonProperty(value = "Country")
-    private String country;
+    private String Country;
     @JsonProperty(value = "Poster")
-    private String poster;
+    private String Poster;
     @JsonProperty(value = "imdbID")
-    private String imdbID;
+    private String ImdbID;
     @JsonProperty(value = "Type")
-    private String type;
+    private String Type;
+
+    public OMDBResponse(){
+
+    }
 
     public OMDBResponse(String title, String year, String genre, String director, String writer, String actors, String plot, String language, String country, String poster, String imdbID, String type) {
-        this.title = title;
-        this.year = year;
-        this.genre = genre;
-        this.director = director;
-        this.writer = writer;
-        this.actors = actors;
-        this.plot = plot;
-        this.language = language;
-        this.country = country;
-        this.poster = poster;
-        this.imdbID = imdbID;
-        this.type = type;
+        Title = title;
+        Year = year;
+        Genre = genre;
+        Director = director;
+        Writer = writer;
+        Actors = actors;
+        Plot = plot;
+        Language = language;
+        Country = country;
+        Poster = poster;
+        ImdbID = imdbID;
+        Type = type;
     }
 
     public String getTitle() {
-        return title;
+        return Title;
     }
 
     public void setTitle(String title) {
-        this.title = title;
+        Title = title;
     }
 
     public String getYear() {
-        return year;
+        return Year;
     }
 
     public void setYear(String year) {
-        this.year = year;
+        Year = year;
     }
 
     public String getGenre() {
-        return genre;
+        return Genre;
     }
 
     public void setGenre(String genre) {
-        this.genre = genre;
+        Genre = genre;
     }
 
     public String getDirector() {
-        return director;
+        return Director;
     }
 
     public void setDirector(String director) {
-        this.director = director;
+        Director = director;
     }
 
     public String getWriter() {
-        return writer;
+        return Writer;
     }
 
     public void setWriter(String writer) {
-        this.writer = writer;
+        Writer = writer;
     }
 
     public String getActors() {
-        return actors;
+        return Actors;
     }
 
     public void setActors(String actors) {
-        this.actors = actors;
+        Actors = actors;
     }
 
     public String getPlot() {
-        return plot;
+        return Plot;
     }
 
     public void setPlot(String plot) {
-        this.plot = plot;
+        Plot = plot;
     }
 
     public String getLanguage() {
-        return language;
+        return Language;
     }
 
     public void setLanguage(String language) {
-        this.language = language;
+        Language = language;
     }
 
     public String getCountry() {
-        return country;
+        return Country;
     }
 
     public void setCountry(String country) {
-        this.country = country;
+        Country = country;
     }
 
     public String getPoster() {
-        return poster;
+        return Poster;
     }
 
     public void setPoster(String poster) {
-        this.poster = poster;
+        Poster = poster;
     }
 
     public String getImdbID() {
-        return imdbID;
+        return ImdbID;
     }
 
     public void setImdbID(String imdbID) {
-        this.imdbID = imdbID;
+        ImdbID = imdbID;
     }
 
     public String getType() {
-        return type;
+        return Type;
     }
 
     public void setType(String type) {
-        this.type = type;
+        Type = type;
     }
 }
+

@@ -2,13 +2,18 @@ package com.formacao.demo.service.impl;
 
 import com.formacao.demo.domain.Account;
 import com.formacao.demo.domain.Client;
+import com.formacao.demo.domain.enums.Profile;
 import com.formacao.demo.dto.ClientNewDTO;
 import com.formacao.demo.repository.ClientRepository;
+import com.formacao.demo.security.UserSpringSecurity;
 import com.formacao.demo.service.AccountService;
 import com.formacao.demo.service.ClientService;
 import com.formacao.demo.service.TransactionService;
+import com.formacao.demo.service.UserService;
+import com.formacao.demo.service.exceptions.AuthorizationException;
 import com.formacao.demo.service.exceptions.DataIntegrityException;
-import com.formacao.demo.service.exceptions.ObjectNotFoundExcepetion;
+import com.formacao.demo.service.exceptions.ObjectNotFoundException;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -21,22 +26,36 @@ public class ClientServiceImpl implements ClientService {
     private ClientRepository clientRepository;
     private AccountService accountService;
     private TransactionService transactionService;
+    private BCryptPasswordEncoder bCryptPasswordEncoder;
+    private UserService userService;
 
-    public ClientServiceImpl(ClientRepository clientRepository, AccountService accountService, TransactionService transactionService) {
+    public ClientServiceImpl(ClientRepository clientRepository, AccountService accountService, TransactionService transactionService, BCryptPasswordEncoder bCryptPasswordEncoder, UserService userService) {
         this.clientRepository = clientRepository;
         this.accountService = accountService;
         this.transactionService = transactionService;
+        this.bCryptPasswordEncoder = bCryptPasswordEncoder;
+        this.userService = userService;
     }
 
     @Override
     public Client find(Integer id) {
-        return clientRepository.findById(id).orElseThrow(() -> new ObjectNotFoundExcepetion("A client with the id: " + id + " was not found"));
+        return clientRepository.findById(id).orElseThrow(() -> new ObjectNotFoundException("A client with the id: " + id + " was not found"));
     }
 
     @Override
     public Client findByCPF(String cpf) {
+        UserSpringSecurity userSpringSecurity = userService.authenticated();
+        if(userSpringSecurity == null || !userSpringSecurity.hasRole(Profile.ROLE_ADMIN) && !cpf.equals(userSpringSecurity.getUsername())){
+            throw new AuthorizationException("Acesso negado!");
+        }
         return Optional.ofNullable(clientRepository.findByCpf(cpf))
-                .orElseThrow(() -> new ObjectNotFoundExcepetion("A client with the cpf: " + cpf + " was not found"));
+                .orElseThrow(() -> new ObjectNotFoundException("A client with the cpf: " + cpf + " was not found"));
+    }
+
+    @Override
+    public Client findByEmail(String email) {
+        return Optional.ofNullable(clientRepository.findByEmail(email))
+                .orElseThrow(() -> new ObjectNotFoundException("A client with the email: " + email + " was not found"));
     }
 
     @Override
@@ -72,7 +91,7 @@ public class ClientServiceImpl implements ClientService {
     }
 
     private Client buildClient(ClientNewDTO clientNewDTO) {
-        return new Client(null, clientNewDTO.getName(), clientNewDTO.getCpf(),
+        return new Client(null, clientNewDTO.getName(), clientNewDTO.getCpf(), clientNewDTO.getEmail(), bCryptPasswordEncoder.encode(clientNewDTO.getPassword()),
                 new Account(null, LocalDateTime.now(), clientNewDTO.getBalance()));
     }
 

@@ -19,4 +19,5 @@ public interface ClientService {
 
     List<Client> findAll();
 
+    Client findByEmail(String email);
 }
