@@ -12,7 +12,7 @@ import javax.validation.Valid;
 import java.util.List;
 
 @Controller
-@RequestMapping(value = "/movies")
+@RequestMapping(value = "/buy-movies")
 public class OMDBController {
     private OMDBService omdbService;
 
@@ -21,14 +21,7 @@ public class OMDBController {
         this.omdbService = omdbService;
     }
 
-    @GetMapping(value = "{/{id}")
-    @ResponseBody
-    @ResponseStatus(HttpStatus.OK)
-    public OMDB find(@PathVariable String id) {
-        return omdbService.find(id);
-    }
-
-    @GetMapping
+    @GetMapping(value = "/all")
     @ResponseBody
     @ResponseStatus(HttpStatus.OK)
     public List<OMDB> findAll() {

@@ -26,15 +26,15 @@ public class ClientController {
         this.clientService = clientService;
     }
 
-    @GetMapping(value = "{/{id}")
-    @ResponseBody
-    @ResponseStatus(HttpStatus.OK)
-    public Client find(@PathVariable Integer id) {
-        return clientService.find(id);
-    }
+//    @GetMapping(value = "{/{id}")
+//    @ResponseBody
+//    @ResponseStatus(HttpStatus.OK)
+//    public Client find(@PathVariable Integer id) {
+//        return clientService.find(id);
+//    }
 
     @PreAuthorize("hasAnyRole('ADMIN')")
-    @GetMapping
+    @GetMapping(value = "/all")
     @ResponseBody
     @ResponseStatus(HttpStatus.OK)
     public List<Client> findAll() {

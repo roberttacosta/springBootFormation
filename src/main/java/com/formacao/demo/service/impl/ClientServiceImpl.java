@@ -14,6 +14,7 @@ import com.formacao.demo.service.exceptions.AuthorizationException;
 import com.formacao.demo.service.exceptions.DataIntegrityException;
 import com.formacao.demo.service.exceptions.ObjectNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -30,7 +31,7 @@ public class ClientServiceImpl implements ClientService {
     private BCryptPasswordEncoder bCryptPasswordEncoder;
     private UserService userService;
 
-    public ClientServiceImpl(ClientRepository clientRepository, AccountService accountService, TransactionService transactionService, BCryptPasswordEncoder bCryptPasswordEncoder, UserService userService) {
+    public ClientServiceImpl(ClientRepository clientRepository, @Lazy AccountService accountService, @Lazy TransactionService transactionService, BCryptPasswordEncoder bCryptPasswordEncoder, UserService userService) {
         this.clientRepository = clientRepository;
         this.accountService = accountService;
         this.transactionService = transactionService;
